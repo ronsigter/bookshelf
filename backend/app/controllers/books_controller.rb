@@ -1,22 +1,22 @@
+# Books Controller
 class BooksController < ApplicationController
   def new
     @book = Book.new
   end
 
   def create
-    @book = Book.new(book_params)
+    book = Book.create(book_params)
 
-    if @book.save
-      render json: @book, status: :created, location: @book
+    if book.valid?
+      render json: { data: book }, status: :created
     else
-      render json: @book.errors, status: :unprocessable_entity
+      render json: { errors: book.errors.full_messages }, status: :not_acceptable
     end
   end
 
   private
-    def book_params
-      params.require(:book).permit(:title, :description).tap do |book_params|
-        book_params.require([:title, :description])
-      end
-    end
+
+  def book_params
+    params.require(:book).permit(:title, :description)
+  end
 end
