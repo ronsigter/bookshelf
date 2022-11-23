@@ -12,12 +12,12 @@ RSpec.describe("Books", type: :request) do
           description: "Angels & Demons is a 2000 bestselling mystery-thriller novel",
         },
       })
-      expect(response.status).to(eql(201))
+      expect(response.status).to(be(201))
       expect(json_body[:data]).to(include({
         title: "Angels and Demons",
         description: "Angels & Demons is a 2000 bestselling mystery-thriller novel",
       }))
-      expect(json_body[:errors]).to(eql(nil))
+      expect(json_body[:errors]).to(be(nil))
     end
 
     it "returns error if there is a missing param" do
@@ -26,8 +26,8 @@ RSpec.describe("Books", type: :request) do
           unknown: "Unknown",
         },
       })
-      expect(response.status).to(eql(422))
-      expect(json_body[:data]).to(eql(nil))
+      expect(response.status).to(be(422))
+      expect(json_body[:data]).to(be(nil))
       expect(json_body[:errors]).to(include("Title can't be blank"))
       expect(json_body[:errors]).to(include("Description can't be blank"))
     end
