@@ -10,9 +10,9 @@ class BooksController < ApplicationController
     book = Book.create(book_params)
 
     if book.valid?
-      render json: { data: book }, status: :created
+      render(json: { data: book }, status: :created)
     else
-      render json: { errors: book.errors.full_messages }, status: :unprocessable_entity
+      render(json: { errors: book.errors.full_messages }, status: :unprocessable_entity)
     end
   end
 

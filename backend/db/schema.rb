@@ -14,14 +14,14 @@
 
 ActiveRecord::Schema[7.0].define(version: 20_221_123_065_706) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'pgcrypto'
-  enable_extension 'plpgsql'
+  enable_extension "pgcrypto"
+  enable_extension "plpgsql"
 
-  create_table 'books', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
-    t.string 'title'
-    t.text 'description'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
-    t.index ['title'], name: 'index_books_on_title'
+  create_table "books", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string("title")
+    t.text("description")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["title"], name: "index_books_on_title")
   end
 end
