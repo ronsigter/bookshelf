@@ -45,6 +45,7 @@ group :development, :test do
   gem "rspec-rails", "~> 6.0.0"
   gem "rubocop-shopify", require: false
   gem "rubocop-rspec", require: false
+  gem "rubocop-rails", require: false
 end
 
 group :development do
