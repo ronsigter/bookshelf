@@ -24,7 +24,7 @@ RSpec.describe 'Books', type: :request do
                unknown: 'Unknown'
              }
            })
-      expect(response.status).to eql(406)
+      expect(response.status).to eql(422)
       expect(json_body[:data]).to eql(nil)
       expect(json_body[:errors]).to include("Title can't be blank")
       expect(json_body[:errors]).to include("Description can't be blank")

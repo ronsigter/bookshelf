@@ -10,7 +10,7 @@ class BooksController < ApplicationController
     if book.valid?
       render json: { data: book }, status: :created
     else
-      render json: { errors: book.errors.full_messages }, status: :not_acceptable
+      render json: { errors: book.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
