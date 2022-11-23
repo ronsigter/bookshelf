@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # RSpec test for Books Controller
 require 'rails_helper'
 
