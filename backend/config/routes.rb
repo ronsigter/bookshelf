@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :books
-  resources :users
+  scope "/api" do
+    scope "/v1" do
+      post "/register", to: "registration#register"
+      resources :books
+    end
+  end
 end
