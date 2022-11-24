@@ -6,7 +6,7 @@ RSpec.describe("Registration") do
   describe "POST /api/registration/" do
     subject(:request) { post("/api/registration/", params: params) }
 
-    let(:decoded_token) { JsonWebToken.decode(json_body[:data][:token]) }
+    let(:decoded_token) { JwtService.decode(json_body[:data][:token]) }
     let(:data) { json_body[:data] }
     let(:error_messages) { json_body[:errors] }
     let(:user_data) { json_body[:data][:user] }

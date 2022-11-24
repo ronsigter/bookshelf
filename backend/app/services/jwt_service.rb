@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class JsonWebToken
+class JwtService
   class << self
     JWT_SECRET_KEY = Rails.application.secrets.secret_key_base.to_s
     def encode(payload, exp = 24.hours.from_now)
