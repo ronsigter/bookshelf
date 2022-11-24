@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -16,18 +18,18 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_23_101219) do
   enable_extension "plpgsql"
 
   create_table "books", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["title"], name: "index_books_on_title"
+    t.string("title")
+    t.text("description")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["title"], name: "index_books_on_title")
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "username"
-    t.string "password_digest"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string("username")
+    t.string("password_digest")
+    t.datetime("created_at", null: false)
+    t.datetime("updated_at", null: false)
+    t.index(["username"], name: "index_users_on_username", unique: true)
   end
-
 end
