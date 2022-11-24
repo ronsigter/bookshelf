@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RegistrationController < ApplicationController
-  def signup
+  def create
     user = User.create(user_params)
 
     if user.valid?

@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe("Registration") do
-  describe "POST /api/v1/signup/" do
-    subject(:request) { post("/api/v1/signup/", params: params) }
+  describe "POST /api/registration/" do
+    subject(:request) { post("/api/registration/", params: params) }
 
     let(:decoded_token) { JsonWebToken.decode(json_body[:data][:token]) }
     let(:data) { json_body[:data] }
