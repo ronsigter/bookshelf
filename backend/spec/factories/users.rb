@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :user do
-      username { "book_user" }
-      password { "password" }
+    username { "book_user" }
+    password { "password" }
   end
 end
