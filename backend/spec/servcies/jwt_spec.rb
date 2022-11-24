@@ -10,9 +10,11 @@ RSpec.describe("JwtService") do
   let(:decode) { JwtService.decode(token) }
 
   describe "encode payload" do
-    subject { encode }
+    subject(:token) { encode }
 
-    it { is_expected.to(be_a(String)) }
+    it "returns a JWT string" do
+      expect(token.split(".").length).to(be(3)) # Header.Payload.Signature
+    end
   end
 
   describe "decode token" do
