@@ -9,12 +9,12 @@ RSpec.describe("Registration") do
     let(:decoded_token) { JwtService.decode(json_body[:data][:token]) }
     let(:data) { json_body[:data] }
     let(:error_messages) { json_body[:errors] }
-    let(:user_data) { json_body[:data][:user] }
+    let(:existing_user) { create(:user, username: "existing_user") }
 
     before { request }
 
     context "when params are valid" do
-      let(:params) { { user: { username: "book_user", password: "password" } } }
+      let(:params) { { user: { username: "book_user_1234", password: "password" } } }
 
       it "returns a :created status" do
         expect(response).to(have_http_status(:created))
@@ -25,14 +25,12 @@ RSpec.describe("Registration") do
       end
 
       it "returns token of created user" do
-        expect(decoded_token["user_id"]).to(eql(user_data[:id]))
+        expect(decoded_token["user_id"]).to(eql(data[:user][:id]))
       end
     end
 
     context "when username exists" do
-      let(:params) { { user: { username: "book_user_0" } } }
-
-      before { create(:user) }
+      let(:params) { { user: { username: "existing_user" } } }
 
       it "returns a :unprocessable_entity status" do
         expect(response).to(have_http_status(:unprocessable_entity))
