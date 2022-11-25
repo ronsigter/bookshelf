@@ -3,13 +3,14 @@
 require "rails_helper"
 
 RSpec.describe("Registration") do
+  before { create(:user, username: "existing_user", password: "password") }
+
   describe "POST /api/registration/" do
     subject(:request) { post("/api/registration/", params: params) }
 
     let(:decoded_token) { JwtService.decode(json_body[:data][:token]) }
     let(:data) { json_body[:data] }
     let(:error_messages) { json_body[:errors] }
-    let(:existing_user) { create(:user, username: "existing_user") }
 
     before { request }
 
