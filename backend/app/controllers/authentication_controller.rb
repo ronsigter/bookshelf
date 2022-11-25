@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AuthenticationController < ApplicationController
-  def login
+  def create
     user = User.find_by(username: login_params[:username])
 
     if user&.authenticate(login_params[:password])
