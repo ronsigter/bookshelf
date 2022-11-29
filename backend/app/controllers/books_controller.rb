@@ -2,6 +2,12 @@
 
 # Books Controller
 class BooksController < ApplicationController
+  def index
+    books = Book.all
+
+    render(json: { data: books }, status: :ok)
+  end
+
   def new
     @book = Book.new
   end

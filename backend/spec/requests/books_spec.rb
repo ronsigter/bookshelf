@@ -4,11 +4,33 @@
 require "rails_helper"
 
 RSpec.describe("Books") do
+  let(:data) { json_body[:data] }
+  let(:error_messages) { json_body[:errors] }
+
+  before { create_list(:book, 5) }
+
+  describe "GET /api/v1/books" do
+    subject(:request) { get("/api/v1/books/") }
+
+    before { request }
+
+    context "when success" do
+      it "returns an :ok status" do
+        expect(response).to(have_http_status(:ok))
+      end
+
+      it "does not return an error field" do
+        expect(error_messages).to(be_nil)
+      end
+
+      it "returns an array of book object" do
+        expect(data.length).to(be(5))
+      end
+    end
+  end
+
   describe "POST /api/v1/books/" do
     subject(:request) { post("/api/v1/books/", params: params) }
-
-    let(:data) { json_body[:data] }
-    let(:error_messages) { json_body[:errors] }
 
     before { request }
 
