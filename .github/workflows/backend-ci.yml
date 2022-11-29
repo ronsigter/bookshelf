@@ -11,9 +11,6 @@ env:
 jobs:
   install:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./backend
     services:
       postgres:
         image: postgres:latest
@@ -35,18 +32,21 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
+      - run: cd backend
       - name: Install dependencies
         run: bundle install
   linters:
     runs-on: ubuntu-latest
     needs: install
     steps:
+      - run: cd backend
       - name: Linters
         run: rubocop
   tests:
     runs-on: ubuntu-latest
     needs: install
     steps:
+      - run: cd backend
       - name: Tests
         env:
           RAILS_ENV: test
