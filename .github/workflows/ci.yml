@@ -1,0 +1,43 @@
+name: CI
+
+on: [pull_request]
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.12.1]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: cd frontend && yarn install
+      - name: Linters
+        run: cd frontend && yarn lint
+      - name: Tests
+        run: cd frontend && yarn test
+      - name: Build
+        run: cd frontend && yarn build
+  backend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        ruby-version: [3.1.2]
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Ruby ${{ matrix.ruby-version }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby-version }}
+      - name: Install dependencies
+        run: cd backend && bundle install
+      - name: Linters
+        run: cd backend && rubocop
+      - name: Tests
+        run: cd backend && rspec
