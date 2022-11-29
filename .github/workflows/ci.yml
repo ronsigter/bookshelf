@@ -28,6 +28,10 @@ jobs:
     strategy:
       matrix:
         ruby-version: [3.1.2]
+    services:
+      postgres:
+        image: postgres:12.7
+        ports: [5432:5432]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -39,5 +43,9 @@ jobs:
         run: cd backend && bundle install
       - name: Linters
         run: cd backend && rubocop
+      - name: Setup test database
+        env:
+          RAILS_ENV: test
+        run: cd backend && rails db:setup
       - name: Tests
         run: cd backend && rspec
