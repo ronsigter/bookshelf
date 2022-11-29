@@ -28,6 +28,8 @@ jobs:
         run: yarn build
   backend:
     runs-on: ubuntu-latest
+    container:
+      image: timbru31/ruby-node:latest
     strategy:
       matrix:
         ruby-version:
@@ -60,8 +62,6 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
-      - name: Setup system dependencies
-        run: sudo apt-get install libpq-dev
       - name: Checkout Code
         uses: actions/checkout@v3
       - name: Setup Ruby ${{ matrix.ruby-version }}
