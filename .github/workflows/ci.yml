@@ -80,5 +80,6 @@ jobs:
           DATABASE_PORT: ${{ matrix.database-port }}
           POSTGRES_DB: ${{ matrix.database-name }}
         run: |
-          rails db:setup
+          rails db:create
+          rails db:migrate
           rspec
