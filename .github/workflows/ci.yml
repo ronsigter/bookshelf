@@ -30,7 +30,7 @@ jobs:
         ruby-version: [3.1.2]
     services:
       postgres:
-        image: postgres:12.7
+        image: postgres:15
         ports: [5432:5432]
     steps:
       - name: Checkout Code
