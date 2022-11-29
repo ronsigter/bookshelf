@@ -4,34 +4,12 @@ on: [pull_request]
 
 env:
   RUBY_VERSION: 3.1.2
-  NODE_VERSION: 18.12.1
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: backend_test
 
 jobs:
-  frontend:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-      - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-      - name: Install dependencies
-        run: yarn install
-      - name: Linters
-        run: yarn lint
-      - name: Tests
-        run: yarn test:ci
-      - name: Build
-        run: yarn build
-
-  backend:
+  install:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -59,8 +37,22 @@ jobs:
           ruby-version: ${{ env.RUBY_VERSION }}
       - name: Install dependencies
         run: bundle install
+  linters:
+    runs-on: ubuntu-latest
+    needs: install
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
       - name: Linters
         run: rubocop
+  tests:
+    runs-on: ubuntu-latest
+    needs: install
+    defaults:
+      run:
+        working-directory: ./backend
+    steps:
       - name: Tests
         env:
           RAILS_ENV: test

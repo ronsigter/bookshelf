@@ -1,0 +1,51 @@
+name: Backend CI
+
+on: [pull_request]
+
+env:
+  NODE_VERSION: 18.12.1
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install dependencies
+        run: yarn install
+  linters:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    needs: install
+    steps:
+      - name: Linters
+        run: yarn lint
+  tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    needs: install
+    steps:
+      - name: Tests
+        run: yarn test:ci
+      - name: Build
+        run: yarn build
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    needs: install
+    steps:
+      - name: Build
+        run: yarn build
