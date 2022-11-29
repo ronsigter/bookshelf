@@ -1,4 +1,4 @@
-name: Backend CI
+name: Frontend CI
 
 on: [pull_request]
 
@@ -22,18 +22,12 @@ jobs:
         run: yarn install
   linters:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
     needs: install
     steps:
       - name: Linters
         run: yarn lint
   tests:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
     needs: install
     steps:
       - name: Tests
@@ -42,9 +36,6 @@ jobs:
         run: yarn build
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./frontend
     needs: install
     steps:
       - name: Build
