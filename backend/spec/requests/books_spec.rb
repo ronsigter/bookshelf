@@ -49,11 +49,9 @@ RSpec.describe("Books") do
 
     before { request }
 
-    context "when there's no page parameter" do
-      let(:params) { {} }
-
+    shared_examples "a paginated request" do |status, items_length, pages, current_page, count|
       it "returns an :ok status" do
-        expect(response).to(have_http_status(:ok))
+        expect(response).to(have_http_status(status))
       end
 
       it "does not return an error field" do
@@ -61,48 +59,32 @@ RSpec.describe("Books") do
       end
 
       it "returns an array of book object" do
-        expect(data[:items].length).to(be(20))
+        expect(data[:items].length).to(be(items_length))
       end
 
       it "returns total number of pages" do
-        expect(data[:pages]).to(be(5))
+        expect(data[:pages]).to(be(pages))
       end
 
       it "returns current page of 1" do
-        expect(data[:current_page]).to(be(1))
+        expect(data[:current_page]).to(be(current_page))
       end
 
       it "returns total number of books" do
-        expect(data[:count]).to(be(100))
+        expect(data[:count]).to(be(count))
       end
+    end
+
+    context "when there's no page parameter" do
+      let(:params) { {} }
+
+      it_behaves_like "a paginated request", :ok, 20, 5, 1, 100
     end
 
     context "when there's a page parameter" do
       let(:params) { { page: 5, per_page: 10 } }
 
-      it "returns an :ok status" do
-        expect(response).to(have_http_status(:ok))
-      end
-
-      it "does not return an error field" do
-        expect(error_messages).to(be_nil)
-      end
-
-      it "returns an array of book object" do
-        expect(data[:items].length).to(be(10))
-      end
-
-      it "returns total number of pages" do
-        expect(data[:pages]).to(be(10))
-      end
-
-      it "returns current page of 5" do
-        expect(data[:current_page]).to(be(5))
-      end
-
-      it "returns total number of books" do
-        expect(data[:count]).to(be(100))
-      end
+      it_behaves_like "a paginated request", :ok, 10, 10, 5, 100
     end
   end
 
