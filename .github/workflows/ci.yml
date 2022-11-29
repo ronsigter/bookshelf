@@ -61,12 +61,10 @@ jobs:
         run: bundle install
       - name: Linters
         run: rubocop
-      - name: Create database
+      - name: Tests
         env:
-          DATABASE_URL: postgres://postgres:@localhost:5432/backend_test
           RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:@localhost:5432/backend_test
         run: |
           bundler exec rails db:setup
-      - name: Tests
-        run: |
           bundler exec rspec spec
