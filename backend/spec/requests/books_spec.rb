@@ -9,6 +9,41 @@ RSpec.describe("Books") do
 
   before { create_list(:book, 5) }
 
+  describe "GET /api/v1/books/:id" do
+    subject(:request) { get("/api/v1/books/#{book_id}") }
+
+    before { request }
+
+    context "when book exists" do
+      let(:book) { Book.first }
+      let(:book_id) { book.id }
+
+      it "returns an :ok status" do
+        expect(response).to(have_http_status(:ok))
+      end
+
+      it "returns the book data" do
+        expect(data).to(include({
+          id: book.id,
+          title: book.title,
+          description: book.description,
+        }))
+      end
+    end
+
+    context "when book does not exists" do
+      let(:book_id) { SecureRandom.uuid }
+
+      it "returns an :ok status" do
+        expect(response).to(have_http_status(:ok))
+      end
+
+      it "returns null data" do
+        expect(data).to(be_nil)
+      end
+    end
+  end
+
   describe "GET /api/v1/books" do
     subject(:request) { get("/api/v1/books/") }
 
@@ -49,7 +84,7 @@ RSpec.describe("Books") do
       end
 
       it "returns created book object" do
-        expect(json_body[:data]).to(include({
+        expect(data).to(include({
           title: "Angels and Demons",
           description: "Angels & Demons is a 2000 bestselling mystery-thriller novel",
         }))

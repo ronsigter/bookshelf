@@ -2,10 +2,16 @@
 
 # Books Controller
 class BooksController < ApplicationController
+  before_action :set_book, only: [:show]
+
   def index
     books = Book.all
 
     render(json: { data: books }, status: :ok)
+  end
+
+  def show
+    render(json: { data: @book }, status: :ok)
   end
 
   def new
@@ -26,5 +32,9 @@ class BooksController < ApplicationController
 
   def book_params
     params.require(:book).permit(:title, :description)
+  end
+
+  def set_book
+    @book = Book.find_by(id: params[:id])
   end
 end
