@@ -1,0 +1,70 @@
+name: CI
+
+on: [pull_request]
+
+env:
+  RUBY_VERSION: 3.1.2
+  NODE_VERSION: 18.12.1
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: backend_test
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      - name: Install dependencies
+        run: yarn install
+      - name: Linters
+        run: yarn lint
+      - name: Tests
+        run: yarn test:ci
+      - name: Build
+        run: yarn build
+
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+        ports:
+          - 5432:5432
+        options:
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Ruby ${{ env.RUBY_VERSION }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Install dependencies
+        run: bundle install
+      - name: Linters
+        run: rubocop
+      - name: Tests
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:@localhost:5432/backend_test
+        run: |
+          bundler exec rails db:setup
+          bundler exec rspec spec
