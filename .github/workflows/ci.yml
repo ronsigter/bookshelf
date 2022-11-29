@@ -63,6 +63,7 @@ jobs:
       - name: Tests
         env:
           RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:@localhost:5432/backend_test
         run: |
           rails db:create
           rails db:migrate
