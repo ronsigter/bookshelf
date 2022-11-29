@@ -31,7 +31,7 @@ jobs:
     services:
       postgres:
         image: postgres:15
-        ports: [5432:5432]
+        ports: ["5432:5432"]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
