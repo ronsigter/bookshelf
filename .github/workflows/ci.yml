@@ -28,16 +28,16 @@ jobs:
     strategy:
       matrix:
         ruby-version: [3.1.2]
-        pg_user: [backend_user]
-        pg_password: [""]
-        pg_db: [backend_test]
-        pg_host: [localhost]
+    env:
+      RAILS_ENV: test
+      PGHOST: localhost
+      PGUSER: postgres
     services:
       postgres:
         image: postgres:15
         env:
-          POSTGRES_USER: backend_user
-          POSTGRES_DB: backend_test
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
           POSTGRES_PASSWORD: ""
         ports: ["5432:5432"]
     steps:
@@ -52,10 +52,6 @@ jobs:
       - name: Linters
         run: cd backend && rubocop
       - name: Setup test database
-        env:
-          RAILS_ENV: test
-          PGHOST: localhost
-          PGUSER: backend_user
         run: cd backend && rails db:setup
       - name: Tests
         run: cd backend && rspec
