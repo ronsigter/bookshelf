@@ -20,7 +20,7 @@ jobs:
       - name: Linters
         run: cd frontend && yarn lint
       - name: Tests
-        run: cd frontend && yarn test
+        run: cd frontend && yarn test:ci
       - name: Build
         run: cd frontend && yarn build
   backend:
@@ -28,9 +28,17 @@ jobs:
     strategy:
       matrix:
         ruby-version: [3.1.2]
+        pg_user: [backend_user]
+        pg_password: [""]
+        pg_db: [backend_test]
+        pg_host: [localhost]
     services:
       postgres:
         image: postgres:15
+        env:
+          POSTGRES_USER: backend_user
+          POSTGRES_DB: backend_test
+          POSTGRES_PASSWORD: ""
         ports: ["5432:5432"]
     steps:
       - name: Checkout Code
@@ -46,6 +54,8 @@ jobs:
       - name: Setup test database
         env:
           RAILS_ENV: test
+          PGHOST: localhost
+          PGUSER: backend_user
         run: cd backend && rails db:setup
       - name: Tests
         run: cd backend && rspec
