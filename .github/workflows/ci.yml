@@ -34,13 +34,13 @@ jobs:
         ruby-version:
         - 3.1.2
         database-name:
-        - postgres
+        - backend
         database-password:
         - postgres
         database-user:
         - postgres
         database-host:
-        - postgres
+        - localhost
         database-port:
         - 5432
     defaults:
