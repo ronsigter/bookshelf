@@ -26,16 +26,15 @@ jobs:
         run: yarn test:ci
       - name: Build
         run: yarn build
+
   backend:
     runs-on: ubuntu-latest
-    container:
-      image: timbru31/ruby-node:latest
     strategy:
       matrix:
         ruby-version:
         - 3.1.2
         database-name:
-        - backend
+        - postgres
         database-password:
         - postgres
         database-user:
