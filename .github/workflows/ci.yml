@@ -40,8 +40,6 @@ jobs:
         image: postgres:latest
         env:
           POSTGRES_DB: backend_test
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: ""
         ports:
           - 5432:5432
         options:
