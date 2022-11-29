@@ -3,9 +3,16 @@
 # Books Controller
 class BooksController < ApplicationController
   def index
-    @books = Book.all
+    if params[:page]
+      @books = Book.page(params[:page]).per(params[:per_page])
+    end
 
-    render(json: { data: books }, status: :ok)
+    render(json: { data: {
+      items: books,
+      pages: books.total_pages,
+      current_page: books.current_page,
+      count: books.total_count,
+    } }, status: :ok)
   end
 
   def show
@@ -37,6 +44,6 @@ class BooksController < ApplicationController
   end
 
   def books
-    @books ||= Book.all
+    @books ||= Book.page(1)
   end
 end

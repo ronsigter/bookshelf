@@ -7,7 +7,7 @@ RSpec.describe("Books") do
   let(:data) { json_body[:data] }
   let(:error_messages) { json_body[:errors] }
 
-  before { create_list(:book, 5) }
+  before { create_list(:book, 100) }
 
   describe "GET /api/v1/books/:id" do
     subject(:request) { get("/api/v1/books/#{book_id}") }
@@ -45,11 +45,13 @@ RSpec.describe("Books") do
   end
 
   describe "GET /api/v1/books" do
-    subject(:request) { get("/api/v1/books/") }
+    subject(:request) { get("/api/v1/books/", params: params) }
 
     before { request }
 
-    context "when success" do
+    context "when there's no page parameter" do
+      let(:params) { {} }
+
       it "returns an :ok status" do
         expect(response).to(have_http_status(:ok))
       end
@@ -59,7 +61,47 @@ RSpec.describe("Books") do
       end
 
       it "returns an array of book object" do
-        expect(data.length).to(be(5))
+        expect(data[:items].length).to(be(20))
+      end
+
+      it "returns total number of pages" do
+        expect(data[:pages]).to(be(5))
+      end
+
+      it "returns current page of 1" do
+        expect(data[:current_page]).to(be(1))
+      end
+
+      it "returns total number of books" do
+        expect(data[:count]).to(be(100))
+      end
+    end
+
+    context "when there's a page parameter" do
+      let(:params) { { page: 5, per_page: 10 } }
+
+      it "returns an :ok status" do
+        expect(response).to(have_http_status(:ok))
+      end
+
+      it "does not return an error field" do
+        expect(error_messages).to(be_nil)
+      end
+
+      it "returns an array of book object" do
+        expect(data[:items].length).to(be(10))
+      end
+
+      it "returns total number of pages" do
+        expect(data[:pages]).to(be(10))
+      end
+
+      it "returns current page of 5" do
+        expect(data[:current_page]).to(be(5))
+      end
+
+      it "returns total number of books" do
+        expect(data[:count]).to(be(100))
       end
     end
   end

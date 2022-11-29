@@ -16,4 +16,6 @@
 #
 class Book < ApplicationRecord
   validates :title, :description, presence: true
+
+  paginates_per 20
 end
