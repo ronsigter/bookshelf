@@ -31,18 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby-version:
-        - 3.1.2
-        database-name:
-        - backend
-        database-password:
-        - postgres
-        database-user:
-        - postgres
-        database-host:
-        - localhost
-        database-port:
-        - 5432
+        ruby-version: [3.1.2]
     defaults:
       run:
         working-directory: ./backend
@@ -50,9 +39,9 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          POSTGRES_DB: ${{ matrix.database-name }}
-          POSTGRES_USER: ${{ matrix.database-user }}
-          POSTGRES_PASSWORD: ${{ matrix.database-password }}
+          POSTGRES_DB: backend_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ""
         ports:
           - 5432:5432
         options:
@@ -74,12 +63,6 @@ jobs:
       - name: Tests
         env:
           RAILS_ENV: test
-          DATABASE_NAME_TEST: ${{ matrix.database-name }}
-          DATABASE_USER: ${{ matrix.database-user }}
-          DATABASE_PASSWORD: ${{ matrix.database-password }}
-          DATABASE_HOST: ${{ matrix.database-host }}
-          DATABASE_PORT: ${{ matrix.database-port }}
-          POSTGRES_DB: ${{ matrix.database-name }}
         run: |
           rails db:create
           rails db:migrate
