@@ -2,13 +2,19 @@
 
 # Books Controller
 class BooksController < ApplicationController
+  def index
+    render(json: CollectionPresenter.new(books), status: :ok)
+  end
+
+  def show
+    render(json: { data: book }, status: :ok)
+  end
+
   def new
     @book = Book.new
   end
 
   def create
-    book = Book.create(book_params)
-
     if book.valid?
       render(json: { data: book }, status: :created)
     else
@@ -20,5 +26,13 @@ class BooksController < ApplicationController
 
   def book_params
     params.require(:book).permit(:title, :description)
+  end
+
+  def book
+    @book ||= params[:id] ? Book.find_by(id: params[:id]) : Book.create(book_params)
+  end
+
+  def books
+    @books ||= Book.page(params[:page])
   end
 end

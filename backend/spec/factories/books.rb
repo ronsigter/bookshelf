@@ -14,8 +14,9 @@
 #
 #  index_books_on_title  (title)
 #
-class Book < ApplicationRecord
-  validates :title, :description, presence: true
-
-  paginates_per 20
+FactoryBot.define do
+  factory :book do
+    title { Faker::Book.title }
+    description { Faker::Lorem.paragraph(sentence_count: 5) }
+  end
 end
