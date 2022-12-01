@@ -49,12 +49,12 @@ RSpec.describe("Books") do
     end
 
     context "when there's a page parameter" do
-      let(:params) { { page: 5, per_page: 10 } }
+      let(:params) { { page: 5 } }
 
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
-      it { expect(data[:items].length).to(be(10)) }
-      it { expect(data[:pages]).to(be(10)) }
+      it { expect(data[:items].length).to(be(20)) }
+      it { expect(data[:pages]).to(be(5)) }
       it { expect(data[:current_page]).to(be(5)) }
       it { expect(data[:count]).to(be(100)) }
     end

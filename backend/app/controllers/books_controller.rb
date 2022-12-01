@@ -3,10 +3,6 @@
 # Books Controller
 class BooksController < ApplicationController
   def index
-    if params[:page]
-      @books = Book.page(params[:page]).per(params[:per_page])
-    end
-
     render(json: { data: {
       items: books,
       pages: books.total_pages,
@@ -24,8 +20,6 @@ class BooksController < ApplicationController
   end
 
   def create
-    @book = Book.create(book_params)
-
     if book.valid?
       render(json: { data: book }, status: :created)
     else
@@ -40,10 +34,10 @@ class BooksController < ApplicationController
   end
 
   def book
-    @book ||= Book.find_by(id: params[:id])
+    @book ||= params[:id] ? Book.find_by(id: params[:id]) : Book.create(book_params)
   end
 
   def books
-    @books ||= Book.page(1)
+    @books ||= Book.page(params[:page])
   end
 end
