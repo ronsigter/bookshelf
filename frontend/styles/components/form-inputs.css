@@ -3,7 +3,7 @@
     @apply relative text-white;
 
     > .input {
-      @apply block px-2.5 pb-2.5 pt-4 w-full text-sm bg-transparent border-2 rounded-lg border-gray-300 appearance-none  focus:border-blue-500 focus:outline-none focus:ring-0;
+      @apply block px-2.5 pb-2.5 pt-4 w-full text-sm bg-transparent border-2 rounded-lg border-gray-300 appearance-none  focus:border-primary focus:outline-none focus:ring-0;
     }
 
     > .label {
@@ -13,7 +13,7 @@
 
     > .input:focus ~ .label,
       .input:not(:placeholder-shown) ~ .label {
-        @apply -translate-y-[1.6rem] translate-x-1 scale-75 text-blue-500 bg-gray-900;
+        @apply -translate-y-[1.6rem] translate-x-1 scale-75 text-primary bg-background;
       }
   }
 }
