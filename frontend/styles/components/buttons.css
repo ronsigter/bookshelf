@@ -1,0 +1,5 @@
+@layer components {
+  .btn {
+    @apply rounded-lg bg-primary text-white p-2.5 hover:bg-[#436fa8] hover:-translate-y-0.5 transition duration-200 focus:outline-none focus:ring-0;
+  }
+}
