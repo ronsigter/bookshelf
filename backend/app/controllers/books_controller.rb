@@ -3,12 +3,7 @@
 # Books Controller
 class BooksController < ApplicationController
   def index
-    render(json: { data: {
-      items: books,
-      pages: books.total_pages,
-      current_page: books.current_page,
-      count: books.total_count,
-    } }, status: :ok)
+    render(json: CollectionPresenter.new(books), status: :ok)
   end
 
   def show
