@@ -1,3 +1,4 @@
+import { Button } from 'components/buttons/Button'
 import { Input } from 'components/forms/Input'
 import type { NextPage } from 'next'
 
@@ -8,6 +9,7 @@ const LoginContainer: NextPage = () => {
         <form className="flex w-full flex-col gap-4">
           <Input label="Username" />
           <Input label="Password" type="password" />
+          <Button label="Sign In" />
         </form>
       </div>
     </div>
