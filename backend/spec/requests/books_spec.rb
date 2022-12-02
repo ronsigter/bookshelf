@@ -6,11 +6,12 @@ require "rails_helper"
 RSpec.describe("Books") do
   let(:data) { json_body[:data] }
   let(:error_messages) { json_body[:errors] }
+  let(:headers) { request_header }
 
   before { create_list(:book, 100) }
 
   describe "GET /api/v1/books/:id" do
-    subject(:request) { get("/api/v1/books/#{book_id}") }
+    subject(:request) { get("/api/v1/books/#{book_id}", params: {}, headers: headers) }
 
     before { request }
 
@@ -33,7 +34,7 @@ RSpec.describe("Books") do
   end
 
   describe "GET /api/v1/books" do
-    subject(:request) { get("/api/v1/books/", params: params) }
+    subject(:request) { get("/api/v1/books/", params: params, headers: headers) }
 
     before { request }
 
@@ -61,7 +62,7 @@ RSpec.describe("Books") do
   end
 
   describe "POST /api/v1/books/" do
-    subject(:request) { post("/api/v1/books/", params: params) }
+    subject(:request) { post("/api/v1/books/", params: params, headers: headers) }
 
     before { request }
 

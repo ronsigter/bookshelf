@@ -2,6 +2,8 @@
 
 # Books Controller
 class BooksController < ApplicationController
+  before_action :authorize_request
+
   def index
     render(json: CollectionPresenter.new(books), status: :ok)
   end
