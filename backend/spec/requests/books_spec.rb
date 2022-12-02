@@ -6,7 +6,7 @@ require "rails_helper"
 RSpec.describe("Books") do
   let(:data) { json_body[:data] }
   let(:error_messages) { json_body[:errors] }
-  let(:headers) { request_header }
+  let(:headers) { generate_authorization_header }
 
   before { create_list(:book, 100) }
 
@@ -14,6 +14,13 @@ RSpec.describe("Books") do
     subject(:request) { get("/api/v1/books/#{book_id}", params: {}, headers: headers) }
 
     before { request }
+
+    context "when requesting client is unauthorized" do
+      let(:headers) { {} }
+      let(:book_id) { Book.first.id }
+
+      it { expect(error_messages).to(include("Access denied due to invalid credentials")) }
+    end
 
     context "when book exists" do
       let(:book) { Book.first }
@@ -37,6 +44,13 @@ RSpec.describe("Books") do
     subject(:request) { get("/api/v1/books/", params: params, headers: headers) }
 
     before { request }
+
+    context "when requesting client is unauthorized" do
+      let(:headers) { {} }
+      let(:params) { { page: 5 } }
+
+      it { expect(error_messages).to(include("Access denied due to invalid credentials")) }
+    end
 
     context "when there's no page parameter" do
       let(:params) { {} }
@@ -65,6 +79,16 @@ RSpec.describe("Books") do
     subject(:request) { post("/api/v1/books/", params: params, headers: headers) }
 
     before { request }
+
+    context "when requesting client is unauthorized" do
+      let(:headers) { {} }
+      let(:params) do
+        { book: { title: "Angels and Demons",
+                  description: "Angels & Demons is a 2000 bestselling mystery-thriller novel", } }
+      end
+
+      it { expect(error_messages).to(include("Access denied due to invalid credentials")) }
+    end
 
     context "when params are valid" do
       let(:params) do

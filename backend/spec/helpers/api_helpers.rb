@@ -6,7 +6,7 @@ module ApiHelpers
     JSON.parse(response.body, symbolize_names: true)
   end
 
-  def request_header(user = create(:user))
+  def generate_authorization_header(user = create(:user))
     token = JwtService.encode({ user_id: user.id })
     { "Authorization": "bearer #{token}" }
   end
