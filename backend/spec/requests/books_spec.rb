@@ -13,19 +13,18 @@ RSpec.describe("Books") do
   describe "GET /api/v1/books/:id" do
     subject(:request) { get("/api/v1/books/#{book_id}", params: {}, headers: headers) }
 
+    let(:book) { Book.first }
+    let(:book_id) { book.id }
+
     before { request }
 
     context "when requesting client is unauthorized" do
       let(:headers) { {} }
-      let(:book_id) { Book.first.id }
 
-      it { expect(error_messages).to(include("Access denied due to invalid credentials")) }
+      it { expect(error_messages).not_to(be_nil) }
     end
 
     context "when book exists" do
-      let(:book) { Book.first }
-      let(:book_id) { book.id }
-
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(data).to(include({ id: book.id })) }
       it { expect(data).to(include({ title: book.title })) }
@@ -43,13 +42,14 @@ RSpec.describe("Books") do
   describe "GET /api/v1/books" do
     subject(:request) { get("/api/v1/books/", params: params, headers: headers) }
 
+    let(:params) { { page: 5 } }
+
     before { request }
 
     context "when requesting client is unauthorized" do
       let(:headers) { {} }
-      let(:params) { { page: 5 } }
 
-      it { expect(error_messages).to(include("Access denied due to invalid credentials")) }
+      it { expect(error_messages).not_to(be_nil) }
     end
 
     context "when there's no page parameter" do
@@ -64,8 +64,6 @@ RSpec.describe("Books") do
     end
 
     context "when there's a page parameter" do
-      let(:params) { { page: 5 } }
-
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
       it { expect(data[:items].length).to(be(20)) }
@@ -78,24 +76,20 @@ RSpec.describe("Books") do
   describe "POST /api/v1/books/" do
     subject(:request) { post("/api/v1/books/", params: params, headers: headers) }
 
+    let(:params) do
+      { book: { title: "Angels and Demons",
+                description: "Angels & Demons is a 2000 bestselling mystery-thriller novel", } }
+    end
+
     before { request }
 
     context "when requesting client is unauthorized" do
       let(:headers) { {} }
-      let(:params) do
-        { book: { title: "Angels and Demons",
-                  description: "Angels & Demons is a 2000 bestselling mystery-thriller novel", } }
-      end
 
-      it { expect(error_messages).to(include("Access denied due to invalid credentials")) }
+      it { expect(error_messages).not_to(be_nil) }
     end
 
     context "when params are valid" do
-      let(:params) do
-        { book: { title: "Angels and Demons",
-                  description: "Angels & Demons is a 2000 bestselling mystery-thriller novel", } }
-      end
-
       it { expect(response).to(have_http_status(:created)) }
       it { expect(error_messages).to(be_nil) }
       it { expect(data).to(include({ title: "Angels and Demons" })) }
