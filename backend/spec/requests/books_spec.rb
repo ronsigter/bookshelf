@@ -6,19 +6,32 @@ require "rails_helper"
 RSpec.describe("Books") do
   let(:data) { json_body[:data] }
   let(:error_messages) { json_body[:errors] }
+  let(:headers) { generate_authorization_header }
 
   before { create_list(:book, 100) }
 
+  shared_examples "an unauthorized request" do
+    let(:headers) { {} }
+
+    it { expect(response).to(have_http_status(:unauthorized)) }
+    it { expect(error_messages).to(include("Unauthorized request detected")) }
+  end
+
   describe "GET /api/v1/books/:id" do
-    subject(:request) { get("/api/v1/books/#{book_id}") }
+    subject(:request) { get("/api/v1/books/#{book_id}", params: {}, headers: headers) }
+
+    let(:book) { Book.first }
+    let(:book_id) { book.id }
 
     before { request }
 
-    context "when book exists" do
-      let(:book) { Book.first }
-      let(:book_id) { book.id }
+    context "when requesting client is unauthorized" do
+      it_behaves_like "an unauthorized request"
+    end
 
+    context "when book exists" do
       it { expect(response).to(have_http_status(:ok)) }
+      it { expect(error_messages).to(be_nil) }
       it { expect(data).to(include({ id: book.id })) }
       it { expect(data).to(include({ title: book.title })) }
       it { expect(data).to(include({ description: book.description })) }
@@ -33,9 +46,15 @@ RSpec.describe("Books") do
   end
 
   describe "GET /api/v1/books" do
-    subject(:request) { get("/api/v1/books/", params: params) }
+    subject(:request) { get("/api/v1/books/", params: params, headers: headers) }
+
+    let(:params) { { page: 5 } }
 
     before { request }
+
+    context "when requesting client is unauthorized" do
+      it_behaves_like "an unauthorized request"
+    end
 
     context "when there's no page parameter" do
       let(:params) { {} }
@@ -49,8 +68,6 @@ RSpec.describe("Books") do
     end
 
     context "when there's a page parameter" do
-      let(:params) { { page: 5 } }
-
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
       it { expect(data[:items].length).to(be(20)) }
@@ -61,16 +78,20 @@ RSpec.describe("Books") do
   end
 
   describe "POST /api/v1/books/" do
-    subject(:request) { post("/api/v1/books/", params: params) }
+    subject(:request) { post("/api/v1/books/", params: params, headers: headers) }
+
+    let(:params) do
+      { book: { title: "Angels and Demons",
+                description: "Angels & Demons is a 2000 bestselling mystery-thriller novel", } }
+    end
 
     before { request }
 
-    context "when params are valid" do
-      let(:params) do
-        { book: { title: "Angels and Demons",
-                  description: "Angels & Demons is a 2000 bestselling mystery-thriller novel", } }
-      end
+    context "when requesting client is unauthorized" do
+      it_behaves_like "an unauthorized request"
+    end
 
+    context "when params are valid" do
       it { expect(response).to(have_http_status(:created)) }
       it { expect(error_messages).to(be_nil) }
       it { expect(data).to(include({ title: "Angels and Demons" })) }
