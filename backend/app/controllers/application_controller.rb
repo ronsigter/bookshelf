@@ -8,11 +8,10 @@ class ApplicationController < ActionController::API
     begin
       decoded = JwtService.decode(token)
       @user = User.find(decoded[:user_id])
-    rescue ActiveRecord::RecordNotFound
-      render(json: { errors: ["User does not exists"] }, status: :unauthorized)
-    rescue JWT::DecodeError
-      render(json: { errors: ["Invalid token provided"] }, status: :unauthorized)
+    rescue ActiveRecord::RecordNotFound, JWT::DecodeError
+      render(json: { errors: ["Unauthorized request detected"] }, status: :unauthorized)
     rescue
+      # TODO: Log to an error monitoring tool
       render(json: { errors: ["Unauthorized request detected"] }, status: :unauthorized)
     end
   end

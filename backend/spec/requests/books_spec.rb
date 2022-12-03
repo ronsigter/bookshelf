@@ -10,6 +10,13 @@ RSpec.describe("Books") do
 
   before { create_list(:book, 100) }
 
+  shared_examples "an unauthorized request" do
+    let(:headers) { {} }
+
+    it { expect(response).to(have_http_status(:unauthorized)) }
+    it { expect(error_messages).to(include("Unauthorized request detected")) }
+  end
+
   describe "GET /api/v1/books/:id" do
     subject(:request) { get("/api/v1/books/#{book_id}", params: {}, headers: headers) }
 
@@ -19,13 +26,12 @@ RSpec.describe("Books") do
     before { request }
 
     context "when requesting client is unauthorized" do
-      let(:headers) { {} }
-
-      it { expect(error_messages).not_to(be_nil) }
+      it_behaves_like "an unauthorized request"
     end
 
     context "when book exists" do
       it { expect(response).to(have_http_status(:ok)) }
+      it { expect(error_messages).to(be_nil) }
       it { expect(data).to(include({ id: book.id })) }
       it { expect(data).to(include({ title: book.title })) }
       it { expect(data).to(include({ description: book.description })) }
@@ -47,9 +53,7 @@ RSpec.describe("Books") do
     before { request }
 
     context "when requesting client is unauthorized" do
-      let(:headers) { {} }
-
-      it { expect(error_messages).not_to(be_nil) }
+      it_behaves_like "an unauthorized request"
     end
 
     context "when there's no page parameter" do
@@ -84,9 +88,7 @@ RSpec.describe("Books") do
     before { request }
 
     context "when requesting client is unauthorized" do
-      let(:headers) { {} }
-
-      it { expect(error_messages).not_to(be_nil) }
+      it_behaves_like "an unauthorized request"
     end
 
     context "when params are valid" do
