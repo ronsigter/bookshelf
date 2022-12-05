@@ -3,7 +3,7 @@ import { Input } from 'components/forms/Input'
 import type { NextPage } from 'next'
 import Image from 'next/image'
 
-const LoginContainer: NextPage = () => {
+const LoginPage: NextPage = () => {
   return (
     <div className="bg-background flex h-screen w-full justify-center">
       <div className="flex w-full max-w-sm flex-col items-center justify-center px-4">
@@ -20,4 +20,4 @@ const LoginContainer: NextPage = () => {
   )
 }
 
-export default LoginContainer
+export default LoginPage
