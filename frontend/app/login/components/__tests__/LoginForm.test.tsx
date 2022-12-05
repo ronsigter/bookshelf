@@ -6,10 +6,19 @@ import { setupServer } from 'msw/node'
 
 const server = setupServer(
   rest.post('http://localhost:4000/api/login', async (req, res, ctx) => {
+    const { login } = await req.json()
+    if (login?.username === 'valid_user')
+      return res(
+        ctx.status(200),
+        ctx.json({
+          data: { token: 'header.payload.signature' }
+        })
+      )
+
     return res(
-      ctx.status(200),
+      ctx.status(401),
       ctx.json({
-        data: { token: 'header.payload.signature' }
+        errors: ['Unauthorized']
       })
     )
   })
@@ -35,14 +44,14 @@ jest.mock('next/navigation', () => ({
 describe('<LoginForm />', () => {
   const user = userEvent.setup()
 
-  it('Renders the login form', () => {
+  it('shows the login form', () => {
     render(<LoginForm />)
     expect(screen.getByLabelText(/username/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
   })
 
-  it('Renders error message for required fields', async () => {
+  it('shows a field error message for required fields', async () => {
     render(<LoginForm />)
 
     user.click(screen.getByRole('button', { name: 'Sign In' }))
@@ -56,7 +65,7 @@ describe('<LoginForm />', () => {
     expect(mockRouterPush).toBeCalledTimes(0)
   })
 
-  xit('Renders an error message if params are invalid', async () => {
+  it('shows an error message if invalid user', async () => {
     render(<LoginForm />)
 
     // enter credentials
@@ -68,17 +77,19 @@ describe('<LoginForm />', () => {
     expect(screen.getByRole('presentation', { name: 'button-loading' })).toHaveTextContent(
       'Authenticating...'
     )
-    expect(screen.getByRole('presentation', { name: 'login-error' })).toHaveTextContent(
-      "Sorry, we can't find an account with this username. Please try again."
+    await waitFor(() =>
+      expect(screen.getByRole('presentation', { name: 'login-error' })).toHaveTextContent(
+        "Sorry, we can't find an account with this username. Please try again."
+      )
     )
     expect(mockRouterPush).toBeCalledTimes(0)
   })
 
-  it('Routes to landing page if params are valid', async () => {
+  it('Routes to landing page if user is valid', async () => {
     render(<LoginForm />)
 
     // enter credentials
-    await user.type(screen.getByLabelText(/username/i), faker.internet.userName())
+    await user.type(screen.getByLabelText(/username/i), 'valid_user')
     await user.type(screen.getByLabelText(/password/i), faker.internet.password())
     await user.click(screen.getByRole('button', { name: 'Sign In' }))
 
