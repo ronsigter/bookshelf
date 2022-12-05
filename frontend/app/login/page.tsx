@@ -1,8 +1,7 @@
 import Image from 'next/image'
 import { LoginForm } from './components/LoginForm'
-import type { NextPage } from 'next'
 
-const LoginPage: NextPage = () => {
+export default function LoginPage() {
   return (
     <div className="bg-background flex h-screen w-full justify-center">
       <div className="flex w-full max-w-sm flex-col items-center justify-center px-4">
@@ -14,5 +13,3 @@ const LoginPage: NextPage = () => {
     </div>
   )
 }
-
-export default LoginPage
