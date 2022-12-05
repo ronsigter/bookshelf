@@ -2,11 +2,14 @@ import React from 'react'
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string
+  isError?: boolean
 }
 
 export const Input: React.FC<InputProps> = React.forwardRef<any, InputProps>(
   function InputComponent(props, ref) {
-    const { label, ...rest } = props
+    const { label, isError, ...rest } = props
+
+    const borderColor = isError ? 'border-red-500' : 'border-gray-300'
 
     return (
       <div className="relative text-white">
@@ -15,7 +18,7 @@ export const Input: React.FC<InputProps> = React.forwardRef<any, InputProps>(
           ref={ref}
           id={label}
           placeholder=" "
-          className="focus:border-primary peer block w-full appearance-none rounded-lg border-2 border-gray-300 bg-transparent px-2.5 pb-2.5  pt-4 text-sm focus:outline-none focus:ring-0"
+          className={`focus:border-primary peer block w-full appearance-none rounded-lg border-2 ${borderColor} bg-transparent px-2.5 pb-2.5  pt-4 text-sm focus:outline-none focus:ring-0`}
         />
         <label
           htmlFor={label}

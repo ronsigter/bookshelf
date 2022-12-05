@@ -57,12 +57,17 @@ export const LoginForm: React.FC = () => {
         </div>
       )}
       <div>
-        <Input label="Username" {...register('username', { required: 'Username is required.' })} />
+        <Input
+          label="Username"
+          isError={!!errors.username?.message}
+          {...register('username', { required: 'Username is required.' })}
+        />
         {errorFieldMessage(errors.username?.message)}
       </div>
       <div>
         <Input
           label="Password"
+          isError={!!errors.password?.message}
           type="password"
           {...register('password', { required: 'Password is required.' })}
         />
