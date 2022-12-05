@@ -15,8 +15,7 @@ export const Input: React.FC<InputProps> = (props) => {
       />
       <label
         htmlFor={label}
-        className="peer-focus:peer-placeholder-shown:text-primary peer-focus:peer-placeholder-shown:bg-background absolute top-3 left-1 z-10 origin-[0] px-2 py-1 text-sm text-gray-400
-        transition duration-200 peer-focus:peer-placeholder-shown:-translate-y-[1.6rem] peer-focus:peer-placeholder-shown:translate-x-1 peer-focus:peer-placeholder-shown:scale-75"
+        className="peer-focus:text-primary bg-background absolute top-3 left-1 z-10 origin-[0] -translate-y-[1.6rem] translate-x-1 scale-75 px-2 py-1 text-sm transition duration-200 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:translate-x-0 peer-placeholder-shown:scale-100 peer-placeholder-shown:text-gray-400 peer-focus:-translate-y-[1.6rem] peer-focus:translate-x-1 peer-focus:scale-75"
       >
         {label}
       </label>

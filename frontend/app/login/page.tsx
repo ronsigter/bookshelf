@@ -1,7 +1,6 @@
-import { Button } from 'components/buttons/Button'
-import { Input } from 'components/forms/Input'
-import type { NextPage } from 'next'
 import Image from 'next/image'
+import { LoginForm } from './components/LoginForm'
+import type { NextPage } from 'next'
 
 const LoginPage: NextPage = () => {
   return (
@@ -10,11 +9,7 @@ const LoginPage: NextPage = () => {
         <div className="py-5">
           <Image width={200} height={200} alt="bookney-logo" src="/bookney-light.png" />
         </div>
-        <form className="flex w-full flex-col gap-4">
-          <Input label="Username" />
-          <Input label="Password" type="password" />
-          <Button label="Sign In" />
-        </form>
+        <LoginForm />
       </div>
     </div>
   )
