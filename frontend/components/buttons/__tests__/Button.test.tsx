@@ -8,7 +8,12 @@ describe('<Button />', () => {
   })
 
   it('renders the loading animation', () => {
-    render(<Button isLoading>Button test</Button>)
+    render(
+      <Button isLoading loadingText="Authenticating...">
+        Button test
+      </Button>
+    )
     expect(screen.getByRole('presentation')).toBeInTheDocument()
+    expect(screen.getByRole('button')).toHaveTextContent('Authenticating...')
   })
 })
