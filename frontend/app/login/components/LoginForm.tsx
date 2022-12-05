@@ -9,7 +9,7 @@ type FormType = {
 }
 
 export const LoginForm: React.FC = () => {
-  const { mutate } = useLogin()
+  const { mutate, isLoading } = useLogin()
   const { handleSubmit, register } = useForm<FormType>()
 
   const onSubmit = async (formdata: FormType): Promise<void> => {
@@ -26,9 +26,8 @@ export const LoginForm: React.FC = () => {
   return (
     <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
       <Input label="Username" {...register('username', { required: true })} />
-      <Input label="Password" type="password" {...register('password', { required: true })} />
-      {/* TODO: Add loading indicator */}
-      <Button label="Sign In" />
+      <Input label="Password" type="password" />
+      <Button isLoading={isLoading}>Sign In</Button>
     </form>
   )
 }
