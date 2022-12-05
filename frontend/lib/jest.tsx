@@ -1,11 +1,25 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, RenderOptions, RenderResult } from '@testing-library/react'
 
 type AllTheProvidersProps = {
   children: React.ReactNode
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retryDelay: 1,
+      retry: 0
+    },
+    mutations: {
+      retry: 0,
+      retryDelay: 1
+    }
+  }
+})
+
 const AllTheProviders: React.FC<AllTheProvidersProps> = ({ children }) => {
-  return <>{children}</>
+  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 }
 
 type RenderOptionsType = Omit<RenderOptions, 'queries'>
