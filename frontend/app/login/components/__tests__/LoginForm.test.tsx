@@ -1,35 +1,6 @@
 import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from 'lib/jest'
 import { LoginForm } from '../LoginForm'
 import { faker } from '@faker-js/faker'
-import { rest } from 'msw'
-import { setupServer } from 'msw/node'
-
-const server = setupServer(
-  rest.post('http://localhost:4000/api/login', async (req, res, ctx) => {
-    const { login } = await req.json()
-    if (login?.username === 'valid_user')
-      return res(
-        ctx.status(200),
-        ctx.json({
-          data: { token: 'header.payload.signature' }
-        })
-      )
-
-    return res(
-      ctx.status(401),
-      ctx.json({
-        errors: ['Unauthorized']
-      })
-    )
-  })
-)
-
-beforeAll(() => {
-  server.listen()
-})
-afterAll(() => {
-  server.close()
-})
 
 const mockRouterPush = jest.fn()
 
