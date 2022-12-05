@@ -42,13 +42,21 @@ describe('<LoginForm />', () => {
     expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
   })
 
-  xit('Renders error message for required fields', async () => {
+  it('Renders error message for required fields', async () => {
     render(<LoginForm />)
 
-    await user.click(screen.getByRole('button', { name: 'Sign In' }))
+    user.click(screen.getByRole('button', { name: 'Sign In' }))
+
+    const [username, password] = await screen.findAllByRole('presentation', {
+      name: 'error-field-message'
+    })
+
+    expect(username).toHaveTextContent('Username is required.')
+    expect(password).toHaveTextContent('Password is required.')
+    expect(mockRouterPush).toBeCalledTimes(0)
   })
 
-  it('Renders an error message if params are invalid', async () => {
+  xit('Renders an error message if params are invalid', async () => {
     render(<LoginForm />)
 
     // enter credentials
@@ -60,15 +68,13 @@ describe('<LoginForm />', () => {
     expect(screen.getByRole('presentation', { name: 'button-loading' })).toHaveTextContent(
       'Authenticating...'
     )
-
     expect(screen.getByRole('presentation', { name: 'login-error' })).toHaveTextContent(
       "Sorry, we can't find an account with this username. Please try again."
     )
-
     expect(mockRouterPush).toBeCalledTimes(0)
   })
 
-  xit('Routes to landing page if params are valid', async () => {
+  it('Routes to landing page if params are valid', async () => {
     render(<LoginForm />)
 
     // enter credentials

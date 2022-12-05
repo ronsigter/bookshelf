@@ -15,7 +15,11 @@ type FormType = {
 export const LoginForm: React.FC = () => {
   const router = useRouter()
   const { mutate } = useLogin()
-  const { handleSubmit, register, formState } = useForm<FormType>()
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting }
+  } = useForm<FormType>()
   const [isError, setIsError] = useState(false)
 
   const onSubmit = async (formdata: FormType): Promise<void> => {
@@ -27,6 +31,16 @@ export const LoginForm: React.FC = () => {
       },
       onError: () => setIsError(true)
     })
+  }
+
+  const errorFieldMessage = (error?: string): React.ReactNode => {
+    return (
+      !!error && (
+        <div className="px-[0.75rem] pt-1" role="presentation" aria-label="error-field-message">
+          <p className="text-sm text-red-500">{error}</p>
+        </div>
+      )
+    )
   }
 
   return (
@@ -42,9 +56,19 @@ export const LoginForm: React.FC = () => {
           </p>
         </div>
       )}
-      <Input label="Username" {...register('username', { required: true })} />
-      <Input label="Password" type="password" {...register('password', { required: true })} />
-      <Button isLoading={formState.isSubmitting} loadingText="Authenticating...">
+      <div>
+        <Input label="Username" {...register('username', { required: 'Username is required.' })} />
+        {errorFieldMessage(errors.username?.message)}
+      </div>
+      <div>
+        <Input
+          label="Password"
+          type="password"
+          {...register('password', { required: 'Password is required.' })}
+        />
+        {errorFieldMessage(errors.password?.message)}
+      </div>
+      <Button isLoading={isSubmitting} loadingText="Authenticating...">
         Sign In
       </Button>
     </form>
