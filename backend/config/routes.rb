@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
     scope "/v1" do
       resources :books
+      resources :reading_lists
     end
   end
 end
