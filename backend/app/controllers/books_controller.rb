@@ -12,10 +12,6 @@ class BooksController < ApplicationController
     render(json: { data: book }, status: :ok)
   end
 
-  def new
-    @book = Book.new
-  end
-
   def create
     if book.valid?
       render(json: { data: book }, status: :created)
