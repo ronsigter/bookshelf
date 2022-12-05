@@ -9,7 +9,11 @@ export const Button: React.FC<ButtonProps> = (props) => {
   const { children, isLoading, loadingText = '', ...rest } = props
 
   const buttonLabel = isLoading ? (
-    <div className="flex items-center justify-center gap-2" role="presentation">
+    <div
+      className="flex items-center justify-center gap-2"
+      role="presentation"
+      aria-label="button-loading"
+    >
       <ImSpinner2 className="animate-spin" />
       <p>{loadingText}</p>
     </div>
