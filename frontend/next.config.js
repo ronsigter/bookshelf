@@ -4,6 +4,9 @@ const nextConfig = {
   swcMinify: true,
   experimental: {
     appDir: true
+  },
+  env: {
+    REST_SERVER: process.env.REST_SERVER
   }
 }
 

@@ -15,9 +15,11 @@ type LoginResultType = {
   errors?: string[]
 }
 
+const REST_SERVER = process.env.REST_SERVER || ''
+
 const login = async (credentials: LoginParamsType): Promise<LoginDataType> => {
   try {
-    const response = await fetch('http://localhost:4000/api/login', {
+    const response = await fetch(`${REST_SERVER}/api/login`, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

@@ -14,7 +14,7 @@ type FormType = {
 
 export const LoginForm: React.FC = () => {
   const router = useRouter()
-  const { mutate } = useLogin()
+  const { mutate, isLoading } = useLogin()
   const {
     handleSubmit,
     register,
@@ -73,7 +73,7 @@ export const LoginForm: React.FC = () => {
         />
         {errorFieldMessage(errors.password?.message)}
       </div>
-      <Button isLoading={isSubmitting} loadingText="Authenticating...">
+      <Button isLoading={isLoading || isSubmitting} loadingText="Authenticating...">
         Sign In
       </Button>
     </form>

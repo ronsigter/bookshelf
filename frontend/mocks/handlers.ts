@@ -1,7 +1,9 @@
 import { rest } from 'msw'
 
+const REST_SERVER = process.env.REST_SERVER || ''
+
 export const handlers = [
-  rest.post('http://localhost:4000/api/login', async (req, res, ctx) => {
+  rest.post(`${REST_SERVER}/api/login`, async (req, res, ctx) => {
     const { login } = await req.json()
     if (login?.username === 'valid_user')
       return res(
