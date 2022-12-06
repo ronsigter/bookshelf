@@ -24,5 +24,7 @@
 #
 FactoryBot.define do
   factory :reading_list do
+    user
+    book
   end
 end
