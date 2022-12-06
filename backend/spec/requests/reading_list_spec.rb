@@ -24,9 +24,7 @@ RSpec.describe("ReadingList") do
   describe "PUT /api/v1/reading_list/:id" do
     subject(:request) { put("/api/v1/reading_lists/#{reading_list.id}", params: params, headers: headers) }
 
-    let(:params) do
-      { reading_list: { status: "finished" } }
-    end
+    let(:params) { { reading_list: { status: "finished" } } }
 
     before { request }
 
@@ -50,14 +48,21 @@ RSpec.describe("ReadingList") do
       it { expect(json_body[:data]).to(include({ user_id: reading_list.user_id })) }
       it { expect(json_body[:data]).to(include({ status: "finished" })) }
     end
+
+    context "when status params is of invalid value" do
+      let(:headers) { generate_authorization_header(reading_list.user) }
+      let(:params) { { reading_list: { status: "unknown" } } }
+
+      it { expect(response).to(have_http_status(:unprocessable_entity)) }
+      it { expect(json_body[:errors]).to(include("Status is not included in the list")) }
+      it { expect(json_body[:data]).to(be_nil) }
+    end
   end
 
   describe "POST /api/v1/reading_lists/" do
     subject(:request) { post("/api/v1/reading_lists/", params: params, headers: headers) }
 
-    let(:params) do
-      { reading_list: { book_id: book.id } }
-    end
+    let(:params) { { reading_list: { book_id: book.id } } }
 
     before { request }
 
