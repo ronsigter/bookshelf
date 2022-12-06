@@ -13,8 +13,9 @@
 #
 # Indexes
 #
-#  index_reading_lists_on_book_id  (book_id)
-#  index_reading_lists_on_user_id  (user_id)
+#  index_reading_lists_on_book_id              (book_id)
+#  index_reading_lists_on_user_id              (user_id)
+#  index_reading_lists_on_user_id_and_book_id  (user_id,book_id) UNIQUE
 #
 # Foreign Keys
 #

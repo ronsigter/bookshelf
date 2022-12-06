@@ -8,5 +8,7 @@ class CreateReadingLists < ActiveRecord::Migration[7.0]
       t.string(:status, default: "unread")
       t.timestamps
     end
+
+    add_index(:reading_lists, [:user_id, :book_id], unique: true)
   end
 end
