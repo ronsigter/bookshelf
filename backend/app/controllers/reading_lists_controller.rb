@@ -15,9 +15,18 @@ class ReadingListsController < ApplicationController
     if !user_owns_reading_list?
       render(json: { errors: ["Unauthorized request detected"] }, status: :unauthorized)
     elsif reading_list.update(reading_list_params)
-      render(json: { data: reading_list }, status: :created)
+      render(json: { data: reading_list }, status: :ok)
     else
       render(json: { errors: reading_list.errors.full_messages }, status: :unprocessable_entity)
+    end
+  end
+
+  def destroy
+    if user_owns_reading_list?
+      reading_list.destroy
+      render(json: { data: { message: "Successfully deleted" } }, status: :ok)
+    else
+      render(json: { errors: ["Unauthorized request detected"] }, status: :unauthorized)
     end
   end
 

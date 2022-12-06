@@ -21,6 +21,31 @@ RSpec.describe("ReadingList") do
     it { expect(json_body[:errors]).to(include("Unauthorized request detected")) }
   end
 
+  describe "DELETE /api/v1/reading_list/:id" do
+    subject(:request) { delete("/api/v1/reading_lists/#{reading_list.id}", params: params, headers: headers) }
+
+    let(:params) { {} }
+
+    before { request }
+
+    context "when requesting client is unauthorized" do
+      it_behaves_like "an unauthorized request"
+    end
+
+    context "when accessing client does not own record" do
+      it_behaves_like "an unauthorized request" do
+        let(:headers) { generate_authorization_header(user) }
+      end
+    end
+
+    context "when accessing client does owns record" do
+      let(:headers) { generate_authorization_header(reading_list.user) }
+
+      it { expect(response).to(have_http_status(:ok)) }
+      it { expect(json_body[:data]).to(include({ message: "Successfully deleted" })) }
+    end
+  end
+
   describe "PUT /api/v1/reading_list/:id" do
     subject(:request) { put("/api/v1/reading_lists/#{reading_list.id}", params: params, headers: headers) }
 
@@ -41,7 +66,7 @@ RSpec.describe("ReadingList") do
     context "when accessing client does owns record" do
       let(:headers) { generate_authorization_header(reading_list.user) }
 
-      it { expect(response).to(have_http_status(:created)) }
+      it { expect(response).to(have_http_status(:ok)) }
       it { expect(json_body[:errors]).to(be_nil) }
       it { expect(json_body[:data]).to(include({ id: reading_list.id })) }
       it { expect(json_body[:data]).to(include({ book_id: reading_list.book_id })) }
