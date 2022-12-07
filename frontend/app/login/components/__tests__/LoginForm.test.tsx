@@ -1,9 +1,12 @@
-import { render, screen, userEvent, waitFor, waitForElementToBeRemoved } from 'lib/jest'
+import { render, screen, userEvent, waitFor, setupMockServer } from 'lib/jest'
 import { LoginForm } from '../LoginForm'
 import { faker } from '@faker-js/faker'
+import { apiLoginHandler } from 'mocks/login-api-handler'
+
+// ? Setup server endpoint
+setupMockServer(apiLoginHandler)
 
 const mockRouterPush = jest.fn()
-
 jest.mock('next/navigation', () => ({
   useRouter() {
     return {

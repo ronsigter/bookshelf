@@ -1,5 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { render, RenderOptions, RenderResult } from '@testing-library/react'
+import { render } from '@testing-library/react'
+
+import { setupServer } from 'msw/node'
+import type { RenderOptions, RenderResult } from '@testing-library/react'
+import type { RequestHandler } from 'msw'
 
 type AllTheProvidersProps = {
   children: React.ReactNode
@@ -27,6 +31,21 @@ type RenderOptionsType = Omit<RenderOptions, 'queries'>
 const customRenderer = (ui: React.ReactElement, options?: RenderOptionsType): RenderResult => {
   return render(ui, {
     wrapper: (props) => AllTheProviders({ ...props })
+  })
+}
+
+// ? Function to call for setting up server endpoint
+// ? Must be called before "describe" inside tests
+export const setupMockServer = (handlers: RequestHandler[]) => {
+  const server = setupServer(...handlers)
+
+  beforeAll(() => {
+    console.log('SERVER START')
+    server.listen()
+  })
+  afterAll(() => {
+    console.log('SERVER CLOSE')
+    server.close()
   })
 }
 
