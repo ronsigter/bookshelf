@@ -5,7 +5,7 @@
 # Table name: reading_lists
 #
 #  id         :uuid             not null, primary key
-#  status     :string
+#  status     :integer          default("unread")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  book_id    :uuid

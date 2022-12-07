@@ -5,7 +5,7 @@
 # Table name: reading_lists
 #
 #  id         :uuid             not null, primary key
-#  status     :string
+#  status     :integer          default("unread")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  book_id    :uuid
@@ -24,7 +24,7 @@
 #
 class ReadingList < ApplicationRecord
   extend Enumerize
-  enumerize :status, in: [:unread, :finished], predicates: { prefix: true }, default: :unread
+  enumerize :status, in: { unread: 0, finished: 1 }, predicates: { prefix: true }, default: :unread
 
   belongs_to :user
   belongs_to :book
