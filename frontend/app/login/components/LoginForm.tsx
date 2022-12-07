@@ -14,32 +14,29 @@ type FormType = {
 
 export const LoginForm: React.FC = () => {
   const router = useRouter()
-  const { mutate, isLoading } = useLogin()
+  const { mutate, isLoading, isError } = useLogin()
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting }
   } = useForm<FormType>()
-  const [isError, setIsError] = useState(false)
 
-  const onSubmit = async (formdata: FormType): Promise<void> => {
-    setIsError(false)
+  const onSubmit = (formdata: FormType) => {
     mutate(formdata, {
       onSuccess: () => {
         // TODO: Save token data to cookies
         router.push('/')
-      },
-      onError: () => setIsError(true)
+      }
     })
   }
 
   const errorFieldMessage = (error?: string): React.ReactNode => {
+    if (!error) return null
+
     return (
-      !!error && (
-        <div className="px-[0.75rem] pt-1" role="presentation" aria-label="error-field-message">
-          <p className="text-sm text-red-500">{error}</p>
-        </div>
-      )
+      <div className="px-[0.75rem] pt-1" role="presentation" aria-label="error-field-message">
+        <p className="text-sm text-red-500">{error}</p>
+      </div>
     )
   }
 
