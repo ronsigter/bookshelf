@@ -39,14 +39,9 @@ const customRenderer = (ui: React.ReactElement, options?: RenderOptionsType): Re
 export const setupMockServer = (handlers: RequestHandler[]) => {
   const server = setupServer(...handlers)
 
-  beforeAll(() => {
-    console.log('SERVER START')
-    server.listen()
-  })
-  afterAll(() => {
-    console.log('SERVER CLOSE')
-    server.close()
-  })
+  beforeAll(() => server.listen())
+  afterEach(() => server.resetHandlers())
+  afterAll(() => server.close())
 }
 
 // Re-export all of react-testing lib here
