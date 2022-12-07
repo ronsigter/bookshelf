@@ -4,6 +4,8 @@ class ReadingListsController < ApplicationController
   before_action :authorize_request
 
   def create
+    @reading_list = @user.reading_lists.create(reading_list_params)
+
     if reading_list.valid?
       render(json: { data: reading_list }, status: :created)
     else
@@ -33,14 +35,10 @@ class ReadingListsController < ApplicationController
   private
 
   def reading_list_params
-    params.require(:reading_list).permit(:book_id, :status).merge({ user_id: @user.id })
+    params.require(:reading_list).permit(:book_id, :status)
   end
 
   def reading_list
-    @reading_list ||= if params[:id].present?
-      @user.reading_lists.find_by(id: params[:id])
-    else
-      ReadingList.create(reading_list_params)
-    end
+    @reading_list ||= @user.reading_lists.find_by(id: params[:id])
   end
 end
