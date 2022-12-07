@@ -26,7 +26,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_05_154709) do
   create_table "reading_lists", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id"
     t.uuid "book_id"
-    t.string "status", default: "unread"
+    t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["book_id"], name: "index_reading_lists_on_book_id"

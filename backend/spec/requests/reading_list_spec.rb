@@ -32,13 +32,15 @@ RSpec.describe("ReadingList") do
       it_behaves_like "an unauthorized request"
     end
 
-    context "when accessing client does not own record" do
-      it_behaves_like "an unauthorized request" do
-        let(:headers) { generate_authorization_header(user) }
-      end
+    context "when accessing client does not own the record" do
+      let(:headers) { generate_authorization_header(user) }
+
+      it { expect(response).to(have_http_status(:not_found)) }
+      it { expect(json_body[:errors]).to(include("Reading list not found")) }
+      it { expect(json_body[:data]).to(be_nil) }
     end
 
-    context "when accessing client does owns record" do
+    context "when accessing client does own the record" do
       let(:headers) { generate_authorization_header(reading_list.user) }
 
       it { expect(response).to(have_http_status(:ok)) }
@@ -57,13 +59,15 @@ RSpec.describe("ReadingList") do
       it_behaves_like "an unauthorized request"
     end
 
-    context "when accessing client does not own record" do
-      it_behaves_like "an unauthorized request" do
-        let(:headers) { generate_authorization_header(user) }
-      end
+    context "when accessing client does not own the record" do
+      let(:headers) { generate_authorization_header(user) }
+
+      it { expect(response).to(have_http_status(:not_found)) }
+      it { expect(json_body[:errors]).to(include("Reading list not found")) }
+      it { expect(json_body[:data]).to(be_nil) }
     end
 
-    context "when accessing client does owns record" do
+    context "when accessing client does own the record" do
       let(:headers) { generate_authorization_header(reading_list.user) }
 
       it { expect(response).to(have_http_status(:ok)) }

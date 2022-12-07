@@ -12,8 +12,8 @@ class ReadingListsController < ApplicationController
   end
 
   def update
-    if !user_owns_reading_list?
-      render(json: { errors: ["Unauthorized request detected"] }, status: :unauthorized)
+    if reading_list.blank?
+      render(json: { errors: ["Reading list not found"] }, status: :not_found)
     elsif reading_list.update(reading_list_params)
       render(json: { data: reading_list }, status: :ok)
     else
@@ -22,11 +22,11 @@ class ReadingListsController < ApplicationController
   end
 
   def destroy
-    if user_owns_reading_list?
+    if reading_list.present?
       reading_list.destroy
       render(json: { data: { message: "Successfully deleted" } }, status: :ok)
     else
-      render(json: { errors: ["Unauthorized request detected"] }, status: :unauthorized)
+      render(json: { errors: ["Reading list not found"] }, status: :not_found)
     end
   end
 
@@ -37,10 +37,10 @@ class ReadingListsController < ApplicationController
   end
 
   def reading_list
-    @reading_list ||= params[:id] ? ReadingList.find_by(id: params[:id]) : ReadingList.create(reading_list_params)
-  end
-
-  def user_owns_reading_list?
-    reading_list.user_id == @user.id
+    @reading_list ||= if params[:id].present?
+      @user.reading_lists.find_by(id: params[:id])
+    else
+      ReadingList.create(reading_list_params)
+    end
   end
 end

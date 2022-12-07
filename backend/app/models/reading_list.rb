@@ -5,7 +5,7 @@
 # Table name: reading_lists
 #
 #  id         :uuid             not null, primary key
-#  status     :string           default("unread")
+#  status     :integer          default("unread")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  book_id    :uuid
@@ -23,6 +23,8 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class ReadingList < ApplicationRecord
+  enum :status, { unread: 0, finished: 1 }, default: :unread, _prefix: true
+
   belongs_to :user
   belongs_to :book
 
