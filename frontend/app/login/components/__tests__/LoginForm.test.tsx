@@ -2,6 +2,7 @@ import { render, screen, userEvent, waitFor, setupMockServer } from 'lib/jest'
 import { LoginForm } from '../LoginForm'
 import { faker } from '@faker-js/faker'
 import { apiLoginHandler } from 'mocks/login-api-handler'
+import { db } from 'mocks/db'
 
 // ? Setup server endpoint
 setupMockServer(apiLoginHandler)
@@ -17,6 +18,7 @@ jest.mock('next/navigation', () => ({
 
 describe('<LoginForm />', () => {
   const user = userEvent.setup()
+  const userData = db.user.create()
 
   it('shows the login form', () => {
     render(<LoginForm />)
@@ -63,8 +65,8 @@ describe('<LoginForm />', () => {
     render(<LoginForm />)
 
     // enter credentials
-    await user.type(screen.getByLabelText(/username/i), 'valid_user')
-    await user.type(screen.getByLabelText(/password/i), faker.internet.password())
+    await user.type(screen.getByLabelText(/username/i), userData.username)
+    await user.type(screen.getByLabelText(/password/i), userData.password)
     await user.click(screen.getByRole('button', { name: 'Sign In' }))
 
     // expect loading indicator
