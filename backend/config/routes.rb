@@ -7,8 +7,8 @@ Rails.application.routes.draw do
     post :login, to: "authentication#create"
 
     scope :v1 do
-      resources :books
-      resources :reading_lists
+      resources :books, only: [:create, :index, :show]
+      resources :reading_lists, only: [:create, :update, :destroy]
     end
   end
 end
