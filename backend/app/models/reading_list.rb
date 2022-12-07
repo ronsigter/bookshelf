@@ -5,7 +5,7 @@
 # Table name: reading_lists
 #
 #  id         :uuid             not null, primary key
-#  status     :integer          default("unread")
+#  status     :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  book_id    :uuid
@@ -23,11 +23,11 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class ReadingList < ApplicationRecord
-  enum :status, { unread: 0, finished: 1 }, default: :unread, _prefix: true
+  extend Enumerize
+  enumerize :status, in: [:unread, :finished], predicates: { prefix: true }, default: :unread
 
   belongs_to :user
   belongs_to :book
 
   validates :book_id, uniqueness: { scope: :user_id }
-  validates :status, inclusion: { in: ["unread", "finished"] }
 end
