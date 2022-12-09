@@ -3,7 +3,7 @@
 import { Button } from 'components/buttons/Button'
 import { Input } from 'components/forms/Input'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { setCookie } from 'cookies-next'
 import { useForm } from 'react-hook-form'
 import useLogin from '../hooks/useLogin'
 
@@ -23,8 +23,8 @@ export const LoginForm: React.FC = () => {
 
   const onSubmit = (formdata: FormType) => {
     mutate(formdata, {
-      onSuccess: () => {
-        // TODO: Save token data to cookies
+      onSuccess: ({ data }) => {
+        setCookie('token', data.token)
         router.push('/')
       }
     })
