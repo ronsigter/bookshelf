@@ -15,6 +15,9 @@
 #  index_users_on_username  (username) UNIQUE
 #
 class User < ApplicationRecord
+  has_many :reading_lists, dependent: :destroy
+  has_many :books, through: :reading_lists
+
   has_secure_password
   validates :username, presence: true, uniqueness: true
   validates :password, length: { minimum: 8 }
