@@ -25,7 +25,7 @@ export const LoginForm: React.FC = () => {
     mutate(formdata, {
       onSuccess: ({ data }) => {
         setCookie('token', data.token)
-        router.push('/')
+        router.push('/dashboard')
       }
     })
   }
