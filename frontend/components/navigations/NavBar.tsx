@@ -1,18 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { deleteCookie } from 'cookies-next'
-import { Button } from 'components/buttons/Button'
 import { MENUS } from './constants'
+import { DropdownMenu } from './DropdownMenu'
 
 export const NavBar: React.FC = () => {
-  const router = useRouter()
-
-  const handleOnSignOut = () => {
-    deleteCookie('token')
-    router.replace('/login')
-  }
-
   return (
     <div className="flex items-center gap-10 py-3 px-10">
       <div className="py-1">
@@ -27,9 +18,7 @@ export const NavBar: React.FC = () => {
           </li>
         ))}
       </ul>
-      <div className="ml-auto">
-        <Button onClick={handleOnSignOut}>Sign out</Button>
-      </div>
+      <DropdownMenu />
     </div>
   )
 }
