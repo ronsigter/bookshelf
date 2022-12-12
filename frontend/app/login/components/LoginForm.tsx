@@ -5,6 +5,8 @@ import { Input } from 'components/forms/Input'
 import { useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import { login } from 'services/login'
 
 type FormType = {
   username: string
@@ -14,6 +16,7 @@ type FormType = {
 
 export const LoginForm: React.FC = () => {
   const router = useRouter()
+  const { mutate, isLoading, isError } = useMutation(login)
   const {
     handleSubmit,
     register,
