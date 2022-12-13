@@ -16,13 +16,6 @@ jest.mock('next/navigation', () => ({
   }
 }))
 
-const mockSetCookie = jest.fn()
-jest.mock('cookies-next', () => ({
-  setCookie(key: string, value: string) {
-    mockSetCookie(key, value)
-  }
-}))
-
 describe('<LoginForm />', () => {
   const user = userEvent.setup()
   const userData = db.user.create()
@@ -81,7 +74,6 @@ describe('<LoginForm />', () => {
       'Authenticating...'
     )
 
-    await waitFor(() => expect(mockSetCookie).toBeCalledWith('token', expect.any(String)))
     expect(mockRouterPush).toBeCalledWith('/dashboard')
   })
 })

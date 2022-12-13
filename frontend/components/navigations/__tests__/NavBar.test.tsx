@@ -10,13 +10,6 @@ jest.mock('next/navigation', () => ({
   }
 }))
 
-const mockRemoveCookie = jest.fn()
-jest.mock('cookies-next', () => ({
-  deleteCookie(key: string) {
-    mockRemoveCookie(key)
-  }
-}))
-
 describe('<Navbar />', () => {
   const user = userEvent.setup()
 
@@ -37,7 +30,6 @@ describe('<Navbar />', () => {
 
     await user.click(screen.getByRole('button', { name: /sign out/i }))
 
-    expect(mockRemoveCookie).toHaveBeenCalledWith('token')
     expect(mockRouterReplace).toHaveBeenCalledWith('/login')
   })
 })
