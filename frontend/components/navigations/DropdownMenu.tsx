@@ -1,13 +1,13 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { Button } from 'components/buttons/Button'
+import { signOut } from 'next-auth/react'
+
+// TODO: Style as a dropdown that contains user profile button and Signout
 
 export const DropdownMenu: React.FC = () => {
-  const router = useRouter()
-
   const handleOnSignOut = () => {
-    router.replace('/login')
+    signOut({ callbackUrl: '/login' })
   }
 
   return (

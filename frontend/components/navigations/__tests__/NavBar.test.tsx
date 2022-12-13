@@ -1,12 +1,11 @@
 import { render, screen, userEvent } from 'lib/jest'
 import { NavBar } from '../NavBar'
+import type { SignOutParams } from 'next-auth/react'
 
-const mockRouterReplace = jest.fn()
-jest.mock('next/navigation', () => ({
-  useRouter() {
-    return {
-      replace: mockRouterReplace
-    }
+const mockNextAuthSignOut = jest.fn()
+jest.mock('next-auth/react', () => ({
+  signOut(options: SignOutParams) {
+    mockNextAuthSignOut(options)
   }
 }))
 
@@ -30,6 +29,8 @@ describe('<Navbar />', () => {
 
     await user.click(screen.getByRole('button', { name: /sign out/i }))
 
-    expect(mockRouterReplace).toHaveBeenCalledWith('/login')
+    expect(mockNextAuthSignOut).toHaveBeenCalledWith({
+      callbackUrl: '/login'
+    })
   })
 })
