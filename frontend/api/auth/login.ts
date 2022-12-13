@@ -1,21 +1,11 @@
-import { useMutation } from '@tanstack/react-query'
-
-type LoginParamsType = {
+type LoginParamsVars = {
   username: string
   password: string
 }
 
-type LoginResultType = {
-  data?: {
-    token: string
-    username: string
-  }
-  errors?: string[]
-}
-
 const REST_SERVER = process.env.REST_SERVER || ''
 
-const login = async (credentials: LoginParamsType) => {
+export const login = async (credentials: LoginParamsVars) => {
   const response = await fetch(`${REST_SERVER}/api/login`, {
     method: 'POST',
     headers: {
@@ -33,8 +23,4 @@ const login = async (credentials: LoginParamsType) => {
   if (!response.ok) throw new Error(response.statusText)
 
   return response.json()
-}
-
-export default function useLogin() {
-  return useMutation(login)
 }
