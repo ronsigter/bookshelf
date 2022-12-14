@@ -1,21 +1,17 @@
-'use client'
-
+import { BookCard } from 'components/cards/BookCard'
 import type { Book } from 'services/books'
 
-export const FeaturedBooks: React.FC<{ books: Book[] }> = ({ books }) => {
+type FeaturedBooksProps = {
+  books: Book[]
+}
+
+export const FeaturedBooks: React.FC<FeaturedBooksProps> = ({ books }) => {
   return (
     <div>
-      <div>Featured books</div>
+      <h3 className="mb-4 text-white">Featured books</h3>
       <div className="flex flex-wrap gap-4">
-        {books.map(({ id, title }) => (
-          <div
-            key={id}
-            className="border-border relative h-72 w-52 cursor-pointer rounded-2xl border-4 bg-white transition-all duration-300 hover:scale-105"
-          >
-            <div className="absolute">
-              <p>{title}</p>
-            </div>
-          </div>
+        {books.map((book) => (
+          <BookCard key={book.id} book={book} />
         ))}
       </div>
     </div>
