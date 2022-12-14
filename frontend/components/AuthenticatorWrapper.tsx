@@ -1,23 +1,12 @@
-'use client'
-
 // ? Wrap a page-layout for authentication
-// ? This is a Client side authentication using next-auth's session to check if user is authenticated
 
-// TODO: Add loading indicator component
-// TODO: Add Unauthorized component
+import { unstable_getServerSession } from 'next-auth/next'
+import { redirect } from 'next/navigation'
+import { authOptions } from 'pages/api/auth/[...nextauth]'
 
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-
-export default function AuthenthicatorWrapper({ children }: { children: React.ReactNode }) {
-  const session = useSession()
-  const router = useRouter()
-
-  if (session.status === 'loading') return <div>loading...</div>
-  if (session.status === 'unauthenticated') {
-    router.push('/login')
-    return <div>Unauthorized!</div>
-  }
+export default async function AuthenthicatorWrapper({ children }: { children: React.ReactNode }) {
+  const session = await unstable_getServerSession(authOptions)
+  if (!session) redirect('/login')
 
   return <>{children}</>
 }
