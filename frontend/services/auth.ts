@@ -1,11 +1,11 @@
-type LoginParamsType = {
+type LoginParamsVars = {
   username: string
   password: string
 }
 
 const REST_SERVER = process.env.REST_SERVER || ''
 
-export const login = async (credentials: LoginParamsType) => {
+export const login = async (credentials: LoginParamsVars) => {
   const response = await fetch(`${REST_SERVER}/api/login`, {
     method: 'POST',
     headers: {
