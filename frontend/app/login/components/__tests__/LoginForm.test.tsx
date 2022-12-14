@@ -1,11 +1,27 @@
 import { render, screen, userEvent, waitFor, setupMockServer } from 'lib/jest'
 import { LoginForm } from '../LoginForm'
 import { faker } from '@faker-js/faker'
-import { apiLoginHandler } from 'mocks/login-api-handler'
 import { db } from 'mocks/db'
 
-// ? Setup server endpoint
-setupMockServer(apiLoginHandler)
+jest.mock('next-auth/react', () => {
+  return {
+    signIn: (_type: string, credentials: { username: string; password: string }) => {
+      const { username, password } = credentials
+      const user = db.user.findFirst({
+        where: {
+          username: {
+            equals: username
+          },
+          password: {
+            equals: password
+          }
+        }
+      })
+
+      return { error: user ? null : 'Unauthorized' }
+    }
+  }
+})
 
 const mockRouterPush = jest.fn()
 jest.mock('next/navigation', () => ({
@@ -74,6 +90,6 @@ describe('<LoginForm />', () => {
       'Authenticating...'
     )
 
-    await waitFor(() => expect(mockRouterPush).toBeCalledWith('/'))
+    expect(mockRouterPush).toBeCalledWith('/dashboard')
   })
 })
