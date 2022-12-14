@@ -1,4 +1,4 @@
-import { cookies } from 'next/headers'
+import { getSession } from './session'
 
 const REST_SERVER = process.env.REST_SERVER || ''
 
@@ -15,15 +15,13 @@ type ListBooksType = {
 }
 
 export const listBooks = async (): Promise<ListBooksType> => {
-  const nextCookies = cookies()
-  const token = nextCookies.get('token')?.value
-
+  const session = await getSession()
   const response = await fetch(`${REST_SERVER}/api/v1/books`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: `bearer ${token}`
+      Authorization: `bearer ${session.accessToken}`
     },
     next: {
       revalidate: 10
