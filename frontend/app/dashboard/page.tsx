@@ -1,9 +1,12 @@
+import { listBooks } from 'services/books'
 import { FeaturedBooks } from './components/FeaturedBooks'
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const { items } = await listBooks()
+
   return (
     <div className="flex h-screen flex-col px-10">
-      <FeaturedBooks />
+      <FeaturedBooks books={items} />
     </div>
   )
 }

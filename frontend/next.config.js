@@ -6,7 +6,8 @@ const nextConfig = {
     appDir: true
   },
   env: {
-    REST_SERVER: process.env.REST_SERVER
+    REST_SERVER: process.env.REST_SERVER,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL
   }
 }
 

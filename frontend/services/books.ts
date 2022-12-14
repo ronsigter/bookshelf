@@ -2,13 +2,13 @@ import { getSession } from './session'
 
 const REST_SERVER = process.env.REST_SERVER || ''
 
-type Book = {
+export type Book = {
   id: string
   title: string
   description: string
 }
 
-type ListBooksType = {
+export type ListBooksType = {
   items: Book[]
   pages: number
   current_page: number

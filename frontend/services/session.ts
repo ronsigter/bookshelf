@@ -1,7 +1,9 @@
 import { headers } from 'next/headers'
 
+const NEXTAUTH_URL = process.env.NEXTAUTH_URL || ''
+
 export const getSession = async () => {
-  const response = await fetch('http://localhost:3000/api/auth/session', {
+  const response = await fetch(`${NEXTAUTH_URL}/api/auth/session`, {
     headers: {
       cookie: headers().get('cookie') ?? ''
     }
