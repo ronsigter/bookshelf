@@ -9,12 +9,14 @@ class BooksController < ApplicationController
   end
 
   def show
-    render(json: { data: book }, status: :ok)
+    render(json: { data: book ? BookSerializer.new(book) : nil }, status: :ok)
   end
 
   def create
+    @book = Book.create(book_params)
+
     if book.valid?
-      render(json: { data: book }, status: :created)
+      render(json: { data: BookSerializer.new(book) }, status: :created)
     else
       render(json: { errors: book.errors.full_messages }, status: :unprocessable_entity)
     end
@@ -27,7 +29,7 @@ class BooksController < ApplicationController
   end
 
   def book
-    @book ||= params[:id] ? Book.find_by(id: params[:id]) : Book.create(book_params)
+    @book ||= Book.find_by(id: params[:id])
   end
 
   def books
