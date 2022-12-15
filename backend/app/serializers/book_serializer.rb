@@ -8,7 +8,7 @@ class BookSerializer < ActiveModel::Serializer
   def image
     if object.image.attached?
       {
-        url: rails_blob_url(object.image, only_path: true),
+        url: rails_blob_url(object.image),
       }
     end
   end
