@@ -1,0 +1,18 @@
+default: &default
+  cloud_name: dwknplao3
+  api_key: '324189655898575'
+  api_secret: "ZOlcJEy9p3s7X4KJuXu3U1Whq-4"
+  enhance_image_tag: true
+  static_file_support: false
+
+development:
+  <<: *default
+  static_file_support: false
+
+production:
+  <<: *default
+  static_file_support: true
+
+test:
+  <<: *default
+  static_file_support: false
