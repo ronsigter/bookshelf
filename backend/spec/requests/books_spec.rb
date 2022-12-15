@@ -113,5 +113,25 @@ RSpec.describe("Books") do
       it { expect(error_messages).to(include("Description can't be blank")) }
       it { expect(error_messages).to(include("Image can't be blank")) }
     end
+
+    context "when image file type is not accepted" do
+      let(:file) do
+        Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/dummy.pdf"), "application/pdf")
+      end
+
+      it { expect(response).to(have_http_status(:unprocessable_entity)) }
+      it { expect(data).to(be_nil) }
+      it { expect(error_messages).to(include("Image has an invalid content type")) }
+    end
+
+    context "when image file size is not accepted" do
+      let(:file) do
+        Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/image_5mb.png"), "image/png")
+      end
+
+      it { expect(response).to(have_http_status(:unprocessable_entity)) }
+      it { expect(data).to(be_nil) }
+      it { expect(error_messages).to(include("Image Image must be less than 2MB in size")) }
+    end
   end
 end

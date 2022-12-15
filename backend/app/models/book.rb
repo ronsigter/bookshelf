@@ -23,7 +23,7 @@ class Book < ApplicationRecord
   validates :title, :description, :image, presence: true
   validates :image,
     content_type: [:png, :jpg, :jpeg],
-    size: { less_than: 2.megabytes, message: "must be less than 2MB in size" }
+    size: { less_than: 2.megabytes, message: :image_size }
 
   paginates_per 20
 end

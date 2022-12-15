@@ -30,4 +30,10 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  activerecord:
+    errors:
+      models:
+        book:
+          attributes:
+            image:
+              image_size: "Image must be less than 2MB in size"
