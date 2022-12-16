@@ -8,6 +8,15 @@ const nextConfig = {
   env: {
     REST_SERVER: process.env.REST_SERVER,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '4000'
+      }
+    ]
   }
 }
 

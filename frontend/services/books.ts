@@ -8,6 +8,9 @@ export type Book = {
   id: string
   title: string
   description: string
+  image: {
+    url: string
+  }
 }
 
 export type ListBooksType = {
@@ -20,7 +23,7 @@ export const listBooks = async (): Promise<ListBooksType> => {
   const session = await unstable_getServerSession(authOptions)
   if (!session) redirect('/login')
 
-  const response = await fetch(`${REST_SERVER}/api/v1/books`, {
+  const response = await fetch(`${REST_SERVER}/api/v1/books?page=4`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',

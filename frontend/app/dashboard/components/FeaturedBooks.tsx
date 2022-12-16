@@ -10,9 +10,10 @@ export const FeaturedBooks: React.FC<FeaturedBooksProps> = ({ books }) => {
     <div>
       <h3 className="mb-4 text-white">Featured books</h3>
       <div className="flex flex-wrap gap-4">
-        {books.map((book) => (
-          <BookCard key={book.id} book={book} />
-        ))}
+        {books.map((book) => {
+          console.log(book)
+          return <BookCard key={book.id} book={book} />
+        })}
       </div>
     </div>
   )
