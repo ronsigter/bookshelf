@@ -5,18 +5,18 @@ class BooksController < ApplicationController
   before_action :authorize_request
 
   def index
-    render(json: CollectionPresenter.new(books, BookSerializer), status: :ok)
+    render(json: CollectionPresenter.new(books, BookPresenter), status: :ok)
   end
 
   def show
-    render(json: { data: book ? BookSerializer.new(book) : nil }, status: :ok)
+    render(json: BookPresenter.new(book), status: :ok)
   end
 
   def create
     @book = Book.create(book_params)
 
     if book.valid?
-      render(json: { data: BookSerializer.new(book) }, status: :created)
+      render(json: BookPresenter.new(book), status: :created)
     else
       render(json: { errors: book.errors.full_messages }, status: :unprocessable_entity)
     end
