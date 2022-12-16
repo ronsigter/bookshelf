@@ -18,5 +18,13 @@ FactoryBot.define do
   factory :book do
     title { Faker::Book.title }
     description { Faker::Lorem.paragraph(sentence_count: 5) }
+
+    after(:build) do |book|
+      book.image.attach(
+        io: Rails.root.join("spec/fixtures/book_test.jpeg").open,
+        filename: "book_test.jpg",
+        content_type: "image/jpeg",
+      )
+    end
   end
 end

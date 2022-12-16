@@ -1,0 +1,18 @@
+default: &default
+  cloud_name: <%= Rails.application.credentials.dig(:cloudinary, :cloud_name) %>
+  api_key: <%= Rails.application.credentials.dig(:cloudinary, :api_key) %>
+  api_secret: <%= Rails.application.credentials.dig(:cloudinary, :api_secret) %>
+  enhance_image_tag: true
+  static_file_support: false
+
+development:
+  <<: *default
+  static_file_support: false
+
+production:
+  <<: *default
+  static_file_support: true
+
+test:
+  <<: *default
+  static_file_support: false

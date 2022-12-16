@@ -35,6 +35,7 @@ RSpec.describe("Books") do
       it { expect(data).to(include({ id: book.id })) }
       it { expect(data).to(include({ title: book.title })) }
       it { expect(data).to(include({ description: book.description })) }
+      it { expect(data[:image][:url]).to(be_a(String)) }
     end
 
     context "when book does not exists" do
@@ -80,9 +81,13 @@ RSpec.describe("Books") do
   describe "POST /api/v1/books/" do
     subject(:request) { post("/api/v1/books/", params: params, headers: headers) }
 
+    let(:file) do
+      Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/book_test.jpeg"), "image/jpeg")
+    end
     let(:params) do
       { book: { title: "Angels and Demons",
-                description: "Angels & Demons is a 2000 bestselling mystery-thriller novel", } }
+                description: "Angels & Demons is a 2000 bestselling mystery-thriller novel",
+                image: file, } }
     end
 
     before { request }
@@ -96,6 +101,7 @@ RSpec.describe("Books") do
       it { expect(error_messages).to(be_nil) }
       it { expect(data).to(include({ title: "Angels and Demons" })) }
       it { expect(data).to(include({ description: "Angels & Demons is a 2000 bestselling mystery-thriller novel" })) }
+      it { expect(data[:image][:url]).to(be_a(String)) }
     end
 
     context "when params are missing" do
@@ -105,6 +111,27 @@ RSpec.describe("Books") do
       it { expect(data).to(be_nil) }
       it { expect(error_messages).to(include("Title can't be blank")) }
       it { expect(error_messages).to(include("Description can't be blank")) }
+      it { expect(error_messages).to(include("Image can't be blank")) }
+    end
+
+    context "when image file type is not accepted" do
+      let(:file) do
+        Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/dummy.pdf"), "application/pdf")
+      end
+
+      it { expect(response).to(have_http_status(:unprocessable_entity)) }
+      it { expect(data).to(be_nil) }
+      it { expect(error_messages).to(include("Image has an invalid content type")) }
+    end
+
+    context "when image file size is not accepted" do
+      let(:file) do
+        Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/image_5mb.png"), "image/png")
+      end
+
+      it { expect(response).to(have_http_status(:unprocessable_entity)) }
+      it { expect(data).to(be_nil) }
+      it { expect(error_messages).to(include("Image Image must be less than 2MB in size")) }
     end
   end
 end
