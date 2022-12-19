@@ -11,7 +11,7 @@ type FeaturedBooksProps = {
 // TODO: Add loading indicators
 
 export const FeaturedBooks: React.FC<FeaturedBooksProps> = ({ books }) => {
-  const { data, fetchNextPage } = useListBooksQuery(books)
+  const { data, fetchNextPage, hasNextPage } = useListBooksQuery(books)
 
   return (
     <div>
@@ -20,8 +20,14 @@ export const FeaturedBooks: React.FC<FeaturedBooksProps> = ({ books }) => {
         {data?.pages.map((page) =>
           page.items.map((book) => <BookCard key={book.id} book={book} />)
         )}
+        {hasNextPage && (
+          <div className="flex h-72 w-52 items-center justify-center">
+            <button className="h-full w-full text-white" onClick={() => fetchNextPage()}>
+              More
+            </button>
+          </div>
+        )}
       </div>
-      <button onClick={() => fetchNextPage()}>More</button>
     </div>
   )
 }
