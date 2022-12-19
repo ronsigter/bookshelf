@@ -7,7 +7,7 @@ type BookCardProps = {
 
 export const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const { title, image } = book
-  const imageUrl = image?.url
+  const imageUrl = image?.url || ''
 
   return (
     <div
@@ -16,8 +16,8 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
       aria-label="book-card"
     >
       <Image src={imageUrl} alt={title} fill />
-      <div className=" absolute bottom-0 w-full translate-y-full bg-slate-900/70 px-3 py-4 px-2 transition duration-500 ease-in-out group-hover:translate-y-0">
-        <p className="text-white">{title}</p>
+      <div className=" absolute bottom-0 w-full translate-y-full bg-slate-900/70 px-3 py-4 transition duration-500 ease-in-out group-hover:translate-y-0">
+        <p className="truncate text-white">{title}</p>
       </div>
     </div>
   )
