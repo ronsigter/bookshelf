@@ -1,9 +1,8 @@
 'use client'
 
-import { useInfiniteQuery } from '@tanstack/react-query'
 import { BookCard } from 'components/cards/BookCard'
-import { useSession } from 'next-auth/react'
-import { listBooks, ListBooksType } from 'services/books'
+import { useListBooksQuery } from 'hooks/useListBooksQuery'
+import type { ListBooksType } from 'services/books'
 
 type FeaturedBooksProps = {
   books: ListBooksType
@@ -12,20 +11,7 @@ type FeaturedBooksProps = {
 // TODO: Add loading indicators
 
 export const FeaturedBooks: React.FC<FeaturedBooksProps> = ({ books }) => {
-  const { data: session } = useSession()
-  const { data, fetchNextPage } = useInfiniteQuery({
-    queryKey: ['books'],
-    queryFn: async ({ pageParam = 1 }) => {
-      const books = await listBooks(session, { page: pageParam })
-      return books
-    },
-    getNextPageParam: ({ current_page, pages }) =>
-      current_page < pages ? current_page + 1 : undefined,
-    initialData: {
-      pages: [books],
-      pageParams: [undefined]
-    }
-  })
+  const { data, fetchNextPage } = useListBooksQuery(books)
 
   return (
     <div>
