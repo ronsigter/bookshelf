@@ -12,6 +12,9 @@ export const db = factory({
   book: {
     id: primaryKey(faker.datatype.uuid),
     title: () => faker.commerce.productName(),
-    description: () => faker.commerce.productDescription()
+    description: () => faker.commerce.productDescription(),
+    image: {
+      url: () => faker.image.imageUrl()
+    }
   }
 })

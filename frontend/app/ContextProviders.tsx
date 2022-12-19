@@ -15,8 +15,7 @@ const queryClient = new QueryClient()
 export default function ContextProviders({ children }: AuthContextProps) {
   return (
     <SessionProvider>
-      <QueryClientProvider client={queryClient}></QueryClientProvider>
-      {children}
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     </SessionProvider>
   )
 }
