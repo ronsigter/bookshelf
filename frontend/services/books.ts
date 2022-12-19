@@ -1,3 +1,4 @@
+import { Session } from 'next-auth'
 import { unstable_getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
 import { authOptions } from 'pages/api/auth/[...nextauth]'
@@ -8,8 +9,8 @@ export type Book = {
   id: string
   title: string
   description: string
-  image: {
-    url: string
+  image?: {
+    url?: string
   }
 }
 
@@ -19,19 +20,26 @@ export type ListBooksType = {
   current_page: number
 }
 
-export const listBooks = async (): Promise<ListBooksType> => {
-  const session = await unstable_getServerSession(authOptions)
+type Params = {
+  page?: number
+}
+
+type ListBooks = (session: Session | null, params?: Params) => Promise<ListBooksType>
+
+const defaultParameters: Params = {
+  page: 1
+}
+
+export const listBooks: ListBooks = async (session, params = defaultParameters) => {
+  const { page } = params
   if (!session) redirect('/login')
 
-  const response = await fetch(`${REST_SERVER}/api/v1/books?page=4`, {
+  const response = await fetch(`${REST_SERVER}/api/v1/books?page=${page}`, {
     method: 'GET',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       Authorization: `bearer ${session.accessToken}`
-    },
-    next: {
-      revalidate: 10
     }
   })
 
