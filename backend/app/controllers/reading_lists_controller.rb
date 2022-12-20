@@ -4,7 +4,7 @@ class ReadingListsController < ApplicationController
   before_action :authorize_request
 
   def create
-    @reading_list = @user.reading_lists.create(reading_list_params)
+    @reading_list = current_user.reading_lists.create(reading_list_params)
 
     if reading_list.valid?
       render(json: { data: reading_list }, status: :created)
@@ -39,6 +39,6 @@ class ReadingListsController < ApplicationController
   end
 
   def reading_list
-    @reading_list ||= @user.reading_lists.find_by(id: params[:id])
+    @reading_list ||= current_user.reading_lists.find_by(id: params[:id])
   end
 end
