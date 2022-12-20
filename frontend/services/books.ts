@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation'
 
 const REST_SERVER = process.env.REST_SERVER || ''
 
+export type ReadingListStatus = 'unread' | 'finished' | null
+
 export type Book = {
   id: string
   type: 'book'
@@ -13,7 +15,7 @@ export type Book = {
     image?: {
       url?: string
     }
-    reading_status: 'unread' | 'finished' | null
+    reading_status: ReadingListStatus
   }
 }
 
