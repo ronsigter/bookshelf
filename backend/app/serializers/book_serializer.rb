@@ -20,11 +20,15 @@ class BookSerializer
 
   attributes :id, :title, :description
 
-  attribute :image do |object|
-    if object.image.attached?
+  attribute :image do |book|
+    if book.image.attached?
       {
-        url: rails_blob_url(object.image),
+        url: rails_blob_url(book.image),
       }
     end
+  end
+
+  attribute :reading_status do |book, params|
+    book.reading_lists.find_by(user_id: params[:current_user]&.id)&.status
   end
 end

@@ -6,9 +6,12 @@ require "rails_helper"
 RSpec.describe("Books") do
   let(:data) { json_body[:data] }
   let(:error_messages) { json_body[:errors] }
-  let(:headers) { generate_authorization_header }
+  let(:headers) { generate_authorization_header(User.first) }
 
-  before { create_list(:book, 100) }
+  before do
+    create_list(:book, 100)
+    create_list(:user, 2)
+  end
 
   shared_examples "an unauthorized request" do
     let(:headers) { {} }
@@ -23,19 +26,34 @@ RSpec.describe("Books") do
     let(:book) { Book.first }
     let(:book_id) { book.id }
 
-    before { request }
-
-    context "when requesting client is unauthorized" do
-      it_behaves_like "an unauthorized request"
+    before do
+      create(:reading_list, user: User.first, book: Book.first)
+      request
     end
 
-    context "when book exists" do
+    shared_examples "an existing book" do
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
       it { expect(data[:attributes]).to(include({ id: book.id })) }
       it { expect(data[:attributes]).to(include({ title: book.title })) }
       it { expect(data[:attributes]).to(include({ description: book.description })) }
       it { expect(data[:attributes][:image][:url]).to(be_a(String)) }
+    end
+
+    context "when requesting client is unauthorized" do
+      it_behaves_like "an unauthorized request"
+    end
+
+    context "when book exists and user is part of reading list" do
+      it_behaves_like "an existing book"
+      it { expect(data[:attributes]).to(include({ reading_status: "unread" })) }
+    end
+
+    context "when book exists and user is not part of reading list" do
+      let(:headers) { generate_authorization_header(User.second) }
+
+      it_behaves_like "an existing book"
+      it { expect(data[:attributes]).to(include({ reading_status: nil })) }
     end
 
     context "when book does not exists" do

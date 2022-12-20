@@ -5,11 +5,12 @@ class BooksController < ApplicationController
   before_action :authorize_request
 
   def index
-    render(json: BookSerializer.new(books, meta_pagination(books)), status: :ok)
+    render(json: BookSerializer.new(books, meta_pagination(books, { params: { current_user: current_user } })),
+      status: :ok)
   end
 
   def show
-    render(json: BookSerializer.new(book), status: :ok)
+    render(json: BookSerializer.new(book, { params: { current_user: current_user } }), status: :ok)
   end
 
   def create

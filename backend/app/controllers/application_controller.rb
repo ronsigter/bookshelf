@@ -35,4 +35,8 @@ class ApplicationController < ActionController::API
       },
     }
   end
+
+  def current_user
+    @user
+  end
 end
