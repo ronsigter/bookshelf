@@ -33,13 +33,16 @@ export const addToReadingList: AddToReadingList = async (session, params) => {
   return data
 }
 
-type RemoveFromReadingList = (session: Session | null, params: { book_id: string }) => Promise<void>
+type RemoveFromReadingList = (
+  session: Session | null,
+  params: { reading_list_id: string }
+) => Promise<void>
 
 export const removeFromReadingList: RemoveFromReadingList = async (session, params) => {
-  const { book_id } = params
+  const { reading_list_id } = params
   if (!session) redirect('/login')
 
-  const response = await fetch(`${REST_SERVER}/api/v1/reading_lists/${book_id}`, {
+  const response = await fetch(`${REST_SERVER}/api/v1/reading_lists/${reading_list_id}`, {
     method: 'DELETE',
     headers: headers(session.accessToken)
   })
@@ -53,14 +56,14 @@ export const removeFromReadingList: RemoveFromReadingList = async (session, para
 
 type UpdateReadingListStatus = (
   session: Session | null,
-  params: { book_id: string; status: ReadingListStatus }
+  params: { reading_list_id: string; status: ReadingListStatus }
 ) => Promise<void>
 
 export const updateReadingListStatus: UpdateReadingListStatus = async (session, params) => {
-  const { book_id, status } = params
+  const { reading_list_id, status } = params
   if (!session) redirect('/login')
 
-  const response = await fetch(`${REST_SERVER}/api/v1/reading_lists/${book_id}`, {
+  const response = await fetch(`${REST_SERVER}/api/v1/reading_lists/${reading_list_id}`, {
     method: 'PUT',
     headers: headers(session.accessToken),
     body: JSON.stringify({

@@ -16,6 +16,7 @@ export const db = factory({
     image: {
       url: () => faker.image.imageUrl()
     },
-    reading_status: () => 'unread' as const
+    reading_status: () => 'unread' as const,
+    reading_list_id: () => faker.datatype.uuid()
   }
 })

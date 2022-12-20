@@ -20,7 +20,7 @@ export const useReadingListActions = () => {
   })
 
   const remove = useMutation({
-    mutationFn: async (vars: { book_id: string }) => {
+    mutationFn: async (vars: { reading_list_id: string }) => {
       const data = await removeFromReadingList(session, vars)
       return data
     },
@@ -28,7 +28,7 @@ export const useReadingListActions = () => {
   })
 
   const update = useMutation({
-    mutationFn: async (vars: { book_id: string; status: ReadingListStatus }) => {
+    mutationFn: async (vars: { reading_list_id: string; status: ReadingListStatus }) => {
       const data = await updateReadingListStatus(session, vars)
       return data
     },

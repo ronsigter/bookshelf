@@ -1,6 +1,5 @@
 'use client'
 
-import { useReadingListActions } from 'hooks/useReadingListActions'
 import Image from 'next/image'
 import React from 'react'
 import { FaPlusCircle, FaMinusCircle, FaCheckCircle, FaBook } from 'react-icons/fa'
@@ -8,41 +7,40 @@ import type { Book, ReadingListStatus } from 'services/books'
 
 type BookCardProps = {
   book: Book
+  actions: {
+    onClickAddToList: (book_id: string) => void
+    onClickUpdateStatus: (readingListId: string, status: ReadingListStatus) => void
+    onClickRemoveFromList: (readingListId: string) => void
+  }
 }
 
-export const BookCard: React.FC<BookCardProps> = ({ book }) => {
-  const { title, image, reading_status } = book.attributes
+export const BookCard: React.FC<BookCardProps> = ({ book, actions }) => {
+  const { title, image, reading_status, reading_list_id } = book.attributes
+  const { onClickAddToList, onClickUpdateStatus, onClickRemoveFromList } = actions
   const imageUrl = image?.url || ''
-  const { addToReadingList, removeFromReadingList, updateReadingListStatus } =
-    useReadingListActions()
-
-  const handleUpdateStatus = (book: Book, status: ReadingListStatus) => {
-    updateReadingListStatus({ book_id: book.id, status })
-  }
-
-  const handleAddToList = (book: Book) => {
-    addToReadingList({ book_id: book.id })
-  }
-
-  const handleRemoveFromList = (book: Book) => {
-    removeFromReadingList({ book_id: book.id })
-  }
 
   // TODO: Add button click event
   const actionSelector = (status: ReadingListStatus) => {
-    if (!status) return <FaPlusCircle onClick={() => handleAddToList(book)} title="Add to list" />
+    if (!status)
+      return <FaPlusCircle onClick={() => onClickAddToList(book.id)} title="Add to list" />
 
     return (
       <>
         {status === 'finished' ? (
-          <FaBook onClick={() => handleUpdateStatus(book, 'unread')} title="Mark as unread" />
+          <FaBook
+            onClick={() => onClickUpdateStatus(reading_list_id, 'unread')}
+            title="Mark as unread"
+          />
         ) : (
           <FaCheckCircle
-            onClick={() => handleUpdateStatus(book, 'finished')}
+            onClick={() => onClickUpdateStatus(reading_list_id, 'finished')}
             title="Mark as read"
           />
         )}
-        <FaMinusCircle onClick={() => handleRemoveFromList(book)} title="Remove from list" />
+        <FaMinusCircle
+          onClick={() => onClickRemoveFromList(reading_list_id)}
+          title="Remove from list"
+        />
       </>
     )
   }

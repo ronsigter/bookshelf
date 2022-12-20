@@ -16,6 +16,7 @@ export type Book = {
       url?: string
     }
     reading_status: ReadingListStatus
+    reading_list_id: string
   }
 }
 
