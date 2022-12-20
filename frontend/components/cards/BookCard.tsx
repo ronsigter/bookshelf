@@ -13,13 +13,18 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const { title, image, reading_status } = book.attributes
   const imageUrl = image?.url || ''
 
+  // TODO: Add button click event
   const actionSelector = (status: ReadingSelection) => {
-    if (!status) return <FaPlusCircle />
+    if (!status) return <FaPlusCircle title="add-book" />
 
     return (
       <>
-        {status === 'finished' ? <FaBook /> : <FaCheckCircle />}
-        <FaMinusCircle />
+        {status === 'finished' ? (
+          <FaBook title="unread-book" />
+        ) : (
+          <FaCheckCircle title="read-book" />
+        )}
+        <FaMinusCircle title="remove-book" />
       </>
     )
   }
