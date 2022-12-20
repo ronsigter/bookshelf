@@ -1,7 +1,5 @@
 import { Session } from 'next-auth'
-import { unstable_getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
-import { authOptions } from 'pages/api/auth/[...nextauth]'
 
 const REST_SERVER = process.env.REST_SERVER || ''
 
@@ -15,6 +13,7 @@ export type Book = {
     image?: {
       url?: string
     }
+    reading_status: 'unread' | 'finished' | null
   }
 }
 
