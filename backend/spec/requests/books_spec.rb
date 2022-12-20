@@ -32,10 +32,10 @@ RSpec.describe("Books") do
     context "when book exists" do
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
-      it { expect(data).to(include({ id: book.id })) }
-      it { expect(data).to(include({ title: book.title })) }
-      it { expect(data).to(include({ description: book.description })) }
-      it { expect(data[:image][:url]).to(be_a(String)) }
+      it { expect(data[:attributes]).to(include({ id: book.id })) }
+      it { expect(data[:attributes]).to(include({ title: book.title })) }
+      it { expect(data[:attributes]).to(include({ description: book.description })) }
+      it { expect(data[:attributes][:image][:url]).to(be_a(String)) }
     end
 
     context "when book does not exists" do
@@ -62,19 +62,21 @@ RSpec.describe("Books") do
 
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
-      it { expect(data[:items].length).to(be(20)) }
-      it { expect(data[:pages]).to(be(5)) }
-      it { expect(data[:current_page]).to(be(1)) }
-      it { expect(data[:count]).to(be(100)) }
+      it { expect(data.length).to(be(20)) }
+      it { expect(json_body[:meta][:pagination][:current_page]).to(be(1)) }
+      it { expect(json_body[:meta][:pagination][:next_page]).to(be(2)) }
+      it { expect(json_body[:meta][:pagination][:prev_page]).to(be_nil) }
+      it { expect(json_body[:meta][:pagination][:total_pages]).to(be(5)) }
     end
 
     context "when there's a page parameter" do
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
-      it { expect(data[:items].length).to(be(20)) }
-      it { expect(data[:pages]).to(be(5)) }
-      it { expect(data[:current_page]).to(be(5)) }
-      it { expect(data[:count]).to(be(100)) }
+      it { expect(data.length).to(be(20)) }
+      it { expect(json_body[:meta][:pagination][:current_page]).to(be(5)) }
+      it { expect(json_body[:meta][:pagination][:next_page]).to(be_nil) }
+      it { expect(json_body[:meta][:pagination][:prev_page]).to(be(4)) }
+      it { expect(json_body[:meta][:pagination][:total_pages]).to(be(5)) }
     end
   end
 
@@ -99,9 +101,15 @@ RSpec.describe("Books") do
     context "when params are valid" do
       it { expect(response).to(have_http_status(:created)) }
       it { expect(error_messages).to(be_nil) }
-      it { expect(data).to(include({ title: "Angels and Demons" })) }
-      it { expect(data).to(include({ description: "Angels & Demons is a 2000 bestselling mystery-thriller novel" })) }
-      it { expect(data[:image][:url]).to(be_a(String)) }
+      it { expect(data[:attributes]).to(include({ title: "Angels and Demons" })) }
+
+      it {
+        expect(data[:attributes]).to(include(
+         { description: "Angels & Demons is a 2000 bestselling mystery-thriller novel" },
+       ))
+      }
+
+      it { expect(data[:attributes][:image][:url]).to(be_a(String)) }
     end
 
     context "when params are missing" do

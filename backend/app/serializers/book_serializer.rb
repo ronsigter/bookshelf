@@ -14,12 +14,13 @@
 #
 #  index_books_on_title  (title)
 #
-class BookSerializer < ActiveModel::Serializer
-  include Rails.application.routes.url_helpers
+class BookSerializer
+  include JSONAPI::Serializer
+  singleton_class.include(Rails.application.routes.url_helpers)
 
-  attributes :id, :title, :description, :image
+  attributes :id, :title, :description
 
-  def image
+  attribute :image do |object|
     if object.image.attached?
       {
         url: rails_blob_url(object.image),
