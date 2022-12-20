@@ -6,11 +6,14 @@ require "rails_helper"
 RSpec.describe("Books") do
   let(:data) { json_body[:data] }
   let(:error_messages) { json_body[:errors] }
-  let(:headers) { generate_authorization_header(User.first) }
+  let(:headers) { generate_authorization_header(User.find_by(username: "user-0")) }
 
   before do
     create_list(:book, 100)
-    create_list(:user, 2)
+    build_list(:user, 2) do |user, i|
+      user.username = "user-#{i}"
+      user.save!
+    end
   end
 
   shared_examples "an unauthorized request" do
@@ -27,7 +30,7 @@ RSpec.describe("Books") do
     let(:book_id) { book.id }
 
     before do
-      create(:reading_list, user: User.first, book: Book.first)
+      create(:reading_list, user: User.find_by(username: "user-0"), book: book)
       request
     end
 
@@ -50,7 +53,7 @@ RSpec.describe("Books") do
     end
 
     context "when book exists and user is not part of reading list" do
-      let(:headers) { generate_authorization_header(User.second) }
+      let(:headers) { generate_authorization_header(User.find_by(username: "user-1")) }
 
       it_behaves_like "an existing book"
       it { expect(data[:attributes]).to(include({ reading_status: nil })) }
