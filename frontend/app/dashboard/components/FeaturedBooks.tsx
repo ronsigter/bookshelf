@@ -17,9 +17,7 @@ export const FeaturedBooks: React.FC<FeaturedBooksProps> = ({ books }) => {
     <div>
       <h3 className="mb-4 text-white">Featured books</h3>
       <div className="flex flex-wrap gap-4">
-        {data?.pages.map((page) =>
-          page.items.map((book) => <BookCard key={book.id} book={book} />)
-        )}
+        {data?.pages.map((page) => page.data.map((book) => <BookCard key={book.id} book={book} />))}
         {hasNextPage && (
           <div className="flex h-72 w-52 items-center justify-center">
             <button className="h-full w-full text-white" onClick={() => fetchNextPage()}>

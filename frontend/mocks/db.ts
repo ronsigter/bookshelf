@@ -15,6 +15,7 @@ export const db = factory({
     description: () => faker.commerce.productDescription(),
     image: {
       url: () => faker.image.imageUrl()
-    }
+    },
+    reading_status: () => 'unread' as const
   }
 })

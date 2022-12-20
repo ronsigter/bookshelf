@@ -1,23 +1,34 @@
 import { Session } from 'next-auth'
-import { unstable_getServerSession } from 'next-auth/next'
 import { redirect } from 'next/navigation'
-import { authOptions } from 'pages/api/auth/[...nextauth]'
 
 const REST_SERVER = process.env.REST_SERVER || ''
 
 export type Book = {
   id: string
-  title: string
-  description: string
-  image?: {
-    url?: string
+  type: 'book'
+  attributes: {
+    id: string
+    title: string
+    description: string
+    image?: {
+      url?: string
+    }
+    reading_status: 'unread' | 'finished' | null
+  }
+}
+
+type Pagination = {
+  pagination: {
+    total_pages: number
+    next_page: number | null
+    prev_page: number | null
+    current_page: number
   }
 }
 
 export type ListBooksType = {
-  items: Book[]
-  pages: number
-  current_page: number
+  data: Book[]
+  meta: Pagination
 }
 
 type Params = {
@@ -45,7 +56,7 @@ export const listBooks: ListBooks = async (session, params = defaultParameters) 
 
   if (!response.ok) throw new Error(response.statusText)
 
-  const { data } = await response.json()
+  const data = await response.json()
 
   return data
 }

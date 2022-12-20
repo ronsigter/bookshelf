@@ -14,16 +14,21 @@
 #
 #  index_books_on_title  (title)
 #
-class BookSerializer < ActiveModel::Serializer
-  include Rails.application.routes.url_helpers
+class BookSerializer
+  include JSONAPI::Serializer
+  singleton_class.include(Rails.application.routes.url_helpers)
 
-  attributes :id, :title, :description, :image
+  attributes :id, :title, :description
 
-  def image
-    if object.image.attached?
+  attribute :image do |book|
+    if book.image.attached?
       {
-        url: rails_blob_url(object.image),
+        url: rails_blob_url(book.image),
       }
     end
+  end
+
+  attribute :reading_status do |book, params|
+    book.reading_lists.find_by(user_id: params[:current_user]&.id)&.status
   end
 end

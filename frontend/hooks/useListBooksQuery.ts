@@ -10,8 +10,7 @@ export const useListBooksQuery = (initialData: ListBooksType) => {
       const books = await listBooks(session, { page: pageParam })
       return books
     },
-    getNextPageParam: ({ current_page, pages }) =>
-      current_page < pages ? current_page + 1 : undefined,
+    getNextPageParam: ({ meta }) => meta.pagination.next_page,
     initialData: {
       pages: [initialData],
       pageParams: [undefined]

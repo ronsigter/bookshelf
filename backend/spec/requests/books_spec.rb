@@ -6,9 +6,15 @@ require "rails_helper"
 RSpec.describe("Books") do
   let(:data) { json_body[:data] }
   let(:error_messages) { json_body[:errors] }
-  let(:headers) { generate_authorization_header }
+  let(:headers) { generate_authorization_header(User.find_by(username: "user-0")) }
 
-  before { create_list(:book, 100) }
+  before do
+    create_list(:book, 100)
+    build_list(:user, 2) do |user, i|
+      user.username = "user-#{i}"
+      user.save!
+    end
+  end
 
   shared_examples "an unauthorized request" do
     let(:headers) { {} }
@@ -23,19 +29,34 @@ RSpec.describe("Books") do
     let(:book) { Book.first }
     let(:book_id) { book.id }
 
-    before { request }
+    before do
+      create(:reading_list, user: User.find_by(username: "user-0"), book: book)
+      request
+    end
+
+    shared_examples "an existing book" do
+      it { expect(response).to(have_http_status(:ok)) }
+      it { expect(error_messages).to(be_nil) }
+      it { expect(data[:attributes]).to(include({ id: book.id })) }
+      it { expect(data[:attributes]).to(include({ title: book.title })) }
+      it { expect(data[:attributes]).to(include({ description: book.description })) }
+      it { expect(data[:attributes][:image][:url]).to(be_a(String)) }
+    end
 
     context "when requesting client is unauthorized" do
       it_behaves_like "an unauthorized request"
     end
 
-    context "when book exists" do
-      it { expect(response).to(have_http_status(:ok)) }
-      it { expect(error_messages).to(be_nil) }
-      it { expect(data).to(include({ id: book.id })) }
-      it { expect(data).to(include({ title: book.title })) }
-      it { expect(data).to(include({ description: book.description })) }
-      it { expect(data[:image][:url]).to(be_a(String)) }
+    context "when book exists and user is part of reading list" do
+      it_behaves_like "an existing book"
+      it { expect(data[:attributes]).to(include({ reading_status: "unread" })) }
+    end
+
+    context "when book exists and user is not part of reading list" do
+      let(:headers) { generate_authorization_header(User.find_by(username: "user-1")) }
+
+      it_behaves_like "an existing book"
+      it { expect(data[:attributes]).to(include({ reading_status: nil })) }
     end
 
     context "when book does not exists" do
@@ -62,19 +83,21 @@ RSpec.describe("Books") do
 
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
-      it { expect(data[:items].length).to(be(20)) }
-      it { expect(data[:pages]).to(be(5)) }
-      it { expect(data[:current_page]).to(be(1)) }
-      it { expect(data[:count]).to(be(100)) }
+      it { expect(data.length).to(be(20)) }
+      it { expect(json_body[:meta][:pagination][:current_page]).to(be(1)) }
+      it { expect(json_body[:meta][:pagination][:next_page]).to(be(2)) }
+      it { expect(json_body[:meta][:pagination][:prev_page]).to(be_nil) }
+      it { expect(json_body[:meta][:pagination][:total_pages]).to(be(5)) }
     end
 
     context "when there's a page parameter" do
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
-      it { expect(data[:items].length).to(be(20)) }
-      it { expect(data[:pages]).to(be(5)) }
-      it { expect(data[:current_page]).to(be(5)) }
-      it { expect(data[:count]).to(be(100)) }
+      it { expect(data.length).to(be(20)) }
+      it { expect(json_body[:meta][:pagination][:current_page]).to(be(5)) }
+      it { expect(json_body[:meta][:pagination][:next_page]).to(be_nil) }
+      it { expect(json_body[:meta][:pagination][:prev_page]).to(be(4)) }
+      it { expect(json_body[:meta][:pagination][:total_pages]).to(be(5)) }
     end
   end
 
@@ -99,9 +122,15 @@ RSpec.describe("Books") do
     context "when params are valid" do
       it { expect(response).to(have_http_status(:created)) }
       it { expect(error_messages).to(be_nil) }
-      it { expect(data).to(include({ title: "Angels and Demons" })) }
-      it { expect(data).to(include({ description: "Angels & Demons is a 2000 bestselling mystery-thriller novel" })) }
-      it { expect(data[:image][:url]).to(be_a(String)) }
+      it { expect(data[:attributes]).to(include({ title: "Angels and Demons" })) }
+
+      it {
+        expect(data[:attributes]).to(include(
+         { description: "Angels & Demons is a 2000 bestselling mystery-thriller novel" },
+       ))
+      }
+
+      it { expect(data[:attributes][:image][:url]).to(be_a(String)) }
     end
 
     context "when params are missing" do
