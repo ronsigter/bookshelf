@@ -8,7 +8,15 @@ describe('<BookCard />', () => {
   })
 
   it('renders the BookCard component', () => {
-    render(<BookCard book={book} />)
+    render(
+      <BookCard
+        book={{
+          attributes: book,
+          id: book.id,
+          type: 'book'
+        }}
+      />
+    )
     expect(screen.getByRole('presentation', { name: 'book-card' })).toHaveTextContent(
       'Harry Potter'
     )

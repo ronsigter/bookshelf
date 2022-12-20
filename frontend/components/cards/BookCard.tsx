@@ -6,7 +6,7 @@ type BookCardProps = {
 }
 
 export const BookCard: React.FC<BookCardProps> = ({ book }) => {
-  const { title, image } = book
+  const { title, image } = book.attributes
   const imageUrl = image?.url || ''
 
   return (

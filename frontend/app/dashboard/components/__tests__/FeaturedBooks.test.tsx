@@ -17,15 +17,28 @@ jest.mock('next-auth/react', () => {
 })
 
 describe('<FeaturedBooks />', () => {
-  const books = Array.from({ length: 5 }).map(() => db.book.create())
-
+  const books = Array.from({ length: 5 }).map(() => {
+    const book = db.book.create()
+    return {
+      id: book.id,
+      type: 'book' as const,
+      attributes: book
+    }
+  })
+  const meta = {
+    pagination: {
+      next_page: 2,
+      current_page: 1,
+      prev_page: null,
+      total_pages: 4
+    }
+  }
   it('renders the FeaturedBooks component', () => {
     render(
       <FeaturedBooks
         books={{
-          current_page: 1,
-          pages: 1,
-          items: books
+          data: books,
+          meta
         }}
       />
     )
