@@ -15,16 +15,16 @@ export const BookCard: React.FC<BookCardProps> = ({ book }) => {
 
   // TODO: Add button click event
   const actionSelector = (status: ReadingSelection) => {
-    if (!status) return <FaPlusCircle title="add-book" />
+    if (!status) return <FaPlusCircle title="Add to list" />
 
     return (
       <>
         {status === 'finished' ? (
-          <FaBook title="unread-book" />
+          <FaBook title="Mark as unread" />
         ) : (
-          <FaCheckCircle title="read-book" />
+          <FaCheckCircle title="Mark as read" />
         )}
-        <FaMinusCircle title="remove-book" />
+        <FaMinusCircle title="Remove from list" />
       </>
     )
   }

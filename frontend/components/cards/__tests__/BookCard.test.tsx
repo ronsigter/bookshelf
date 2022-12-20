@@ -5,7 +5,7 @@ import { BookCard } from '../BookCard'
 describe('<BookCard />', () => {
   const book = db.book.create()
 
-  it('renders the add-book icon if status is null', () => {
+  it('renders the "Add to list" icon if status is "null"', () => {
     render(
       <BookCard
         book={{
@@ -15,10 +15,10 @@ describe('<BookCard />', () => {
         }}
       />
     )
-    expect(screen.getByTitle('add-book')).toBeInTheDocument()
+    expect(screen.getByTitle('Add to list')).toBeInTheDocument()
   })
 
-  it('renders the add-book icon if status is null', () => {
+  it('renders both "Mark as unread" and "Remove from lust" icon if status is "unread"', () => {
     render(
       <BookCard
         book={{
@@ -28,11 +28,11 @@ describe('<BookCard />', () => {
         }}
       />
     )
-    expect(screen.getByTitle('read-book')).toBeInTheDocument()
-    expect(screen.getByTitle('remove-book')).toBeInTheDocument()
+    expect(screen.getByTitle('Mark as read')).toBeInTheDocument()
+    expect(screen.getByTitle('Remove from list')).toBeInTheDocument()
   })
 
-  it('renders the add-book icon if status is null', () => {
+  it('renders both "Mark as unread" and "Remove from lust" icon if status is "finished"', () => {
     render(
       <BookCard
         book={{
@@ -42,7 +42,7 @@ describe('<BookCard />', () => {
         }}
       />
     )
-    expect(screen.getByTitle('unread-book')).toBeInTheDocument()
-    expect(screen.getByTitle('remove-book')).toBeInTheDocument()
+    expect(screen.getByTitle('Mark as unread')).toBeInTheDocument()
+    expect(screen.getByTitle('Remove from list')).toBeInTheDocument()
   })
 })
