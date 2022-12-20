@@ -19,7 +19,6 @@ export const BookCard: React.FC<BookCardProps> = ({ book, actions }) => {
   const { onClickAddToList, onClickUpdateStatus, onClickRemoveFromList } = actions
   const imageUrl = image?.url || ''
 
-  // TODO: Add button click event
   const actionSelector = (status: ReadingListStatus) => {
     if (!status)
       return <FaPlusCircle onClick={() => onClickAddToList(book.id)} title="Add to list" />

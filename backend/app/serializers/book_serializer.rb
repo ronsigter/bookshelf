@@ -31,4 +31,8 @@ class BookSerializer
   attribute :reading_status do |book, params|
     book.reading_lists.find_by(user_id: params[:current_user]&.id)&.status
   end
+
+  attribute :reading_list_id do |book, params|
+    book.reading_lists.find_by(user_id: params[:current_user]&.id)&.id
+  end
 end
