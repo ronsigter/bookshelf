@@ -58,7 +58,5 @@ export const listBooks: ListBooks = async (session, params = defaultParameters) 
 
   const data = await response.json()
 
-  console.log('data', data)
-
   return data
 }
