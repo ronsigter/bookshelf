@@ -1,3 +1,6 @@
+'use client'
+
+import { useReadingListActions } from 'hooks/useReadingListActions'
 import Image from 'next/image'
 import React from 'react'
 import { FaPlusCircle, FaMinusCircle, FaCheckCircle, FaBook } from 'react-icons/fa'
@@ -10,17 +13,19 @@ type BookCardProps = {
 export const BookCard: React.FC<BookCardProps> = ({ book }) => {
   const { title, image, reading_status } = book.attributes
   const imageUrl = image?.url || ''
+  const { addToReadingList, removeFromReadingList, updateReadingListStatus } =
+    useReadingListActions()
 
   const handleUpdateStatus = (book: Book, status: ReadingListStatus) => {
-    console.log(book.id, status)
+    updateReadingListStatus({ book_id: book.id, status })
   }
 
   const handleAddToList = (book: Book) => {
-    console.log(book.id)
+    addToReadingList({ book_id: book.id })
   }
 
   const handleRemoveFromList = (book: Book) => {
-    console.log(book.id)
+    removeFromReadingList({ book_id: book.id })
   }
 
   // TODO: Add button click event
