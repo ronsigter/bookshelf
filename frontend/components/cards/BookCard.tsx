@@ -21,7 +21,13 @@ export const BookCard: React.FC<BookCardProps> = ({ book, actions }) => {
 
   const actionSelector = (status: ReadingListStatus) => {
     if (!status)
-      return <FaPlusCircle onClick={() => onClickAddToList(book.id)} title="Add to list" />
+      return (
+        <FaPlusCircle
+          onClick={() => onClickAddToList(book.id)}
+          title="Add to list"
+          className="transition-all duration-200 hover:text-cyan-400"
+        />
+      )
 
     return (
       <>
@@ -29,16 +35,19 @@ export const BookCard: React.FC<BookCardProps> = ({ book, actions }) => {
           <FaBook
             onClick={() => onClickUpdateStatus(reading_list_id, 'unread')}
             title="Mark as unread"
+            className="transition-all duration-200 hover:text-amber-400"
           />
         ) : (
           <FaCheckCircle
             onClick={() => onClickUpdateStatus(reading_list_id, 'finished')}
             title="Mark as read"
+            className="transition-all duration-200 hover:text-emerald-400"
           />
         )}
         <FaMinusCircle
           onClick={() => onClickRemoveFromList(reading_list_id)}
           title="Remove from list"
+          className="transition-all duration-200 hover:text-red-400"
         />
       </>
     )
