@@ -1,5 +1,5 @@
 export const MENUS = [
-  { label: 'home', path: '#' },
-  { label: 'search', path: '#' },
-  { label: 'reading list', path: '#' }
+  { label: 'home', path: '/dashboard' },
+  { label: 'search', path: '/search' },
+  { label: 'reading list', path: '/my-list' }
 ]
