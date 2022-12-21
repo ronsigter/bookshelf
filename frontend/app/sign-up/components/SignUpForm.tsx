@@ -3,35 +3,43 @@
 import { Button } from 'components/buttons/Button'
 import { Input } from 'components/forms/Input'
 import { useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
+import { useMutation } from '@tanstack/react-query'
+import { registration } from 'services/auth'
 
 type FormType = {
   username: string
   password: string
-  userNotFound?: boolean
+  passwordConfirm: string
+  existingUser?: boolean
 }
 
-export const LoginForm: React.FC = () => {
+export const SignUpForm: React.FC = () => {
   const router = useRouter()
   const {
+    watch,
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
     setError,
     clearErrors
   } = useForm<FormType>()
+  const { mutateAsync } = useMutation(registration)
 
   const onSubmit = async (formdata: FormType) => {
-    const data = await signIn('credentials', {
-      ...formdata,
-      redirect: false
+    const { password, username } = formdata
+    await mutateAsync({
+      password,
+      username
     })
-    if (!data?.error) router.push('/dashboard')
-    else
-      setError('userNotFound', {
-        type: 'server',
-        message: "Sorry, we can't find an account with this username. Please try again."
+      .then(() => {
+        router.push('/login')
+      })
+      .catch(() => {
+        setError('existingUser', {
+          type: 'server',
+          message: 'Username already exists. Please try again.'
+        })
       })
   }
 
@@ -44,7 +52,7 @@ export const LoginForm: React.FC = () => {
     )
   }
 
-  const userNotFoundError = (error?: string): React.ReactNode => {
+  const existingUserError = (error?: string): React.ReactNode => {
     if (!error) return null
     return (
       <div className="rounded-lg bg-red-500 px-2 py-3" role="presentation" aria-label="login-error">
@@ -55,7 +63,7 @@ export const LoginForm: React.FC = () => {
 
   return (
     <form className="flex w-full flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-      {userNotFoundError(errors.userNotFound?.message)}
+      {existingUserError(errors.existingUser?.message)}
       <div>
         <Input
           label="Username"
@@ -69,16 +77,35 @@ export const LoginForm: React.FC = () => {
           label="Password"
           isError={!!errors.password?.message}
           type="password"
-          {...register('password', { required: 'Password is required.' })}
+          {...register('password', {
+            required: 'Password is required.',
+            minLength: {
+              value: 8,
+              message: 'Password is too short (minimum is 8 characters)'
+            }
+          })}
         />
         {errorFieldMessage(errors.password?.message)}
       </div>
-      <Button
-        isLoading={isSubmitting}
-        onClick={() => clearErrors()}
-        loadingText="Authenticating..."
-      >
-        Sign In
+      <div>
+        <Input
+          label="Confirm password"
+          isError={!!errors.password?.message}
+          type="password"
+          {...register('passwordConfirm', {
+            required: 'Password confirmation is required.',
+            validate: (val: string) => {
+              if (watch('password') != val) {
+                return 'Your passwords do no match.'
+              }
+            }
+          })}
+        />
+        {errorFieldMessage(errors.passwordConfirm?.message)}
+      </div>
+
+      <Button isLoading={isSubmitting} onClick={() => clearErrors()} loadingText="Registering...">
+        Sign up
       </Button>
     </form>
   )
