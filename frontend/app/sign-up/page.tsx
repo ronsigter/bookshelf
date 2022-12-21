@@ -12,9 +12,9 @@ export default function LoginPage() {
         <LoginForm />
         <div className="py-4">
           <div className="text-sm text-white">
-            Don&apos;t have an account?{' '}
-            <Link href="/sign-up" className="text-sky-400">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/login" className="text-sky-400">
+              Login
             </Link>
           </div>
         </div>
