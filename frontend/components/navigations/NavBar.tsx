@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { MENUS } from './constants'
 import { DropdownMenu } from './DropdownMenu'
+import { NavLinks } from './NavLinks'
 
 export const NavBar: React.FC = () => {
   return (
@@ -12,10 +13,8 @@ export const NavBar: React.FC = () => {
         </Link>
       </div>
       <ul className="flex items-center gap-4">
-        {MENUS.map(({ label, path }) => (
-          <li key={label} className="inline uppercase text-white">
-            <Link href={path}>{label}</Link>
-          </li>
+        {MENUS.map((menu) => (
+          <NavLinks key={menu.label} {...menu} />
         ))}
       </ul>
       <DropdownMenu />
