@@ -17,9 +17,9 @@ describe('<Navbar />', () => {
 
     const links = screen.getAllByRole('link')
     expect(links[0]).toHaveAttribute('href', '/dashboard')
-    expect(links[1]).toHaveAttribute('href', '#')
-    expect(links[2]).toHaveAttribute('href', '#')
-    expect(links[3]).toHaveAttribute('href', '#')
+    expect(links[1]).toHaveAttribute('href', '/dashboard')
+    expect(links[2]).toHaveAttribute('href', '/search')
+    expect(links[3]).toHaveAttribute('href', '/my-list')
     expect(screen.getByRole('button', { name: /sign out/i })).toBeInTheDocument()
     expect(screen.getByRole('img', { name: /bookney-logo/i })).toBeInTheDocument()
   })
