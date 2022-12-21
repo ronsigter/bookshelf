@@ -19,6 +19,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com'
+      },
+      {
+        protocol: 'https',
+        hostname: 'bookshelf-api.up.railway.app'
       }
     ]
   }
