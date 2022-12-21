@@ -1,30 +1,54 @@
+'use client'
+
 import Image from 'next/image'
 import React from 'react'
 import { FaPlusCircle, FaMinusCircle, FaCheckCircle, FaBook } from 'react-icons/fa'
-import type { Book } from 'services/books'
+import type { Book, ReadingListStatus } from 'services/books'
 
 type BookCardProps = {
   book: Book
+  actions: {
+    onClickAddToList: (book_id: string) => void
+    onClickUpdateStatus: (readingListId: string, status: ReadingListStatus) => void
+    onClickRemoveFromList: (readingListId: string) => void
+  }
 }
 
-type ReadingSelection = Book['attributes']['reading_status']
-
-export const BookCard: React.FC<BookCardProps> = ({ book }) => {
-  const { title, image, reading_status } = book.attributes
+export const BookCard: React.FC<BookCardProps> = ({ book, actions }) => {
+  const { title, image, reading_status, reading_list_id } = book.attributes
+  const { onClickAddToList, onClickUpdateStatus, onClickRemoveFromList } = actions
   const imageUrl = image?.url || ''
 
-  // TODO: Add button click event
-  const actionSelector = (status: ReadingSelection) => {
-    if (!status) return <FaPlusCircle title="Add to list" />
+  const actionSelector = (status: ReadingListStatus) => {
+    if (!status)
+      return (
+        <FaPlusCircle
+          onClick={() => onClickAddToList(book.id)}
+          title="Add to list"
+          className="transition-all duration-200 hover:text-cyan-400"
+        />
+      )
 
     return (
       <>
         {status === 'finished' ? (
-          <FaBook title="Mark as unread" />
+          <FaBook
+            onClick={() => onClickUpdateStatus(reading_list_id, 'unread')}
+            title="Mark as unread"
+            className="transition-all duration-200 hover:text-amber-400"
+          />
         ) : (
-          <FaCheckCircle title="Mark as read" />
+          <FaCheckCircle
+            onClick={() => onClickUpdateStatus(reading_list_id, 'finished')}
+            title="Mark as read"
+            className="transition-all duration-200 hover:text-emerald-400"
+          />
         )}
-        <FaMinusCircle title="Remove from list" />
+        <FaMinusCircle
+          onClick={() => onClickRemoveFromList(reading_list_id)}
+          title="Remove from list"
+          className="transition-all duration-200 hover:text-red-400"
+        />
       </>
     )
   }
