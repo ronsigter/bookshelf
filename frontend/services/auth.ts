@@ -24,3 +24,25 @@ export const login = async (credentials: LoginParamsVars) => {
 
   return response.json()
 }
+
+type RegistationVars = {
+  username: string
+  password: string
+}
+
+export const registration = async (credentials: RegistationVars) => {
+  const response = await fetch(`${REST_SERVER}/api/registration`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      user: credentials
+    })
+  })
+
+  if (!response.ok) throw new Error(response.statusText)
+
+  return response.json()
+}

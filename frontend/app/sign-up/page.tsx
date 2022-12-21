@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { LoginForm } from './components/LoginForm'
+import { SignUpForm } from './components/SignUpForm'
 
 export default function LoginPage() {
   return (
@@ -9,12 +9,12 @@ export default function LoginPage() {
         <div className="py-5">
           <Image width={200} height={200} alt="bookney-logo" src="/bookney-light.png" />
         </div>
-        <LoginForm />
+        <SignUpForm />
         <div className="py-4">
           <div className="text-sm text-white">
-            Don&apos;t have an account?{' '}
-            <Link href="/sign-up" className="text-sky-400">
-              Sign up
+            Already have an account?{' '}
+            <Link href="/login" className="text-sky-400">
+              Login
             </Link>
           </div>
         </div>
