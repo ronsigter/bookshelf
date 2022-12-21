@@ -13,7 +13,7 @@ export const useReadingListActions = () => {
 
   const add = useMutation({
     mutationFn: async (vars: { book_id: string }) => {
-      const data = await addToReadingList(session, vars)
+      const { data } = await addToReadingList(session, vars)
       return data
     },
     onSuccess: () => queryClient.invalidateQueries(['books'])
@@ -21,7 +21,7 @@ export const useReadingListActions = () => {
 
   const remove = useMutation({
     mutationFn: async (vars: { reading_list_id: string }) => {
-      const data = await removeFromReadingList(session, vars)
+      const { data } = await removeFromReadingList(session, vars)
       return data
     },
     onSuccess: () => queryClient.invalidateQueries(['books'])
@@ -29,7 +29,7 @@ export const useReadingListActions = () => {
 
   const update = useMutation({
     mutationFn: async (vars: { reading_list_id: string; status: ReadingListStatus }) => {
-      const data = await updateReadingListStatus(session, vars)
+      const { data } = await updateReadingListStatus(session, vars)
       return data
     },
     onSuccess: () => queryClient.invalidateQueries(['books'])

@@ -1,29 +1,36 @@
 import { redirect } from 'next/navigation'
+import { headers } from './utils'
 import type { Session } from 'next-auth'
 import type { ReadingListStatus } from './books'
 
 const REST_SERVER = process.env.REST_SERVER || ''
 
-type AddToReadingList = (session: Session | null, params: { book_id: string }) => Promise<void>
+export type ReadingList = {
+  id: string
+  user_id: string
+  book_id: string
+  status: ReadingListStatus
+}
 
-const headers = (token: string): HeadersInit => ({
-  Accept: 'application/json',
-  'Content-Type': 'application/json',
-  Authorization: `bearer ${token}`
-})
+type AddToReadingList = (
+  session: Session | null,
+  params: { book_id: string }
+) => Promise<{ data: ReadingList }>
 
 export const addToReadingList: AddToReadingList = async (session, params) => {
   const { book_id } = params
   if (!session) redirect('/login')
 
+  const payload = {
+    reading_list: {
+      book_id
+    }
+  }
+
   const response = await fetch(`${REST_SERVER}/api/v1/reading_lists`, {
     method: 'POST',
     headers: headers(session.accessToken),
-    body: JSON.stringify({
-      reading_list: {
-        book_id
-      }
-    })
+    body: JSON.stringify(payload)
   })
 
   if (!response.ok) throw new Error(response.statusText)
@@ -36,7 +43,7 @@ export const addToReadingList: AddToReadingList = async (session, params) => {
 type RemoveFromReadingList = (
   session: Session | null,
   params: { reading_list_id: string }
-) => Promise<void>
+) => Promise<{ data: { message: string } }>
 
 export const removeFromReadingList: RemoveFromReadingList = async (session, params) => {
   const { reading_list_id } = params
@@ -57,20 +64,22 @@ export const removeFromReadingList: RemoveFromReadingList = async (session, para
 type UpdateReadingListStatus = (
   session: Session | null,
   params: { reading_list_id: string; status: ReadingListStatus }
-) => Promise<void>
+) => Promise<{ data: ReadingList }>
 
 export const updateReadingListStatus: UpdateReadingListStatus = async (session, params) => {
   const { reading_list_id, status } = params
   if (!session) redirect('/login')
 
+  const payload = {
+    reading_list: {
+      status
+    }
+  }
+
   const response = await fetch(`${REST_SERVER}/api/v1/reading_lists/${reading_list_id}`, {
     method: 'PUT',
     headers: headers(session.accessToken),
-    body: JSON.stringify({
-      reading_list: {
-        status
-      }
-    })
+    body: JSON.stringify(payload)
   })
 
   if (!response.ok) throw new Error(response.statusText)

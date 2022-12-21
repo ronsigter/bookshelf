@@ -1,5 +1,6 @@
 import { Session } from 'next-auth'
 import { redirect } from 'next/navigation'
+import { headers } from './utils'
 
 const REST_SERVER = process.env.REST_SERVER || ''
 
@@ -50,11 +51,7 @@ export const listBooks: ListBooks = async (session, params = defaultParameters) 
 
   const response = await fetch(`${REST_SERVER}/api/v1/books?page=${page}`, {
     method: 'GET',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: `bearer ${session.accessToken}`
-    }
+    headers: headers(session.accessToken)
   })
 
   if (!response.ok) throw new Error(response.statusText)
