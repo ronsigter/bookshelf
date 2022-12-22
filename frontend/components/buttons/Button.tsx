@@ -1,6 +1,6 @@
 import { ImSpinner2 } from 'react-icons/im'
 
-interface ButtonProps extends React.HtmlHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean
   loadingText?: string
 }
