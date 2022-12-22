@@ -1,7 +1,7 @@
 import { render, screen, setupMockServer, userEvent, waitFor } from 'lib/jest'
 import { CreateBookForm } from '../CreateBookForm'
 import { faker } from '@faker-js/faker'
-import { registerApiHandler } from 'mocks/register-api-handler'
+import { createBookApiHandler } from 'mocks/books-api-handler'
 
 jest.mock('next-auth/react', () => {
   const originalModule = jest.requireActual('next-auth/react')
@@ -17,7 +17,7 @@ jest.mock('next-auth/react', () => {
   }
 })
 
-setupMockServer(registerApiHandler)
+setupMockServer(createBookApiHandler)
 
 describe('<CreateBookForm />', () => {
   const user = userEvent.setup()
