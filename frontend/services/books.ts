@@ -60,3 +60,32 @@ export const listBooks: ListBooks = async (session, params = defaultParameters) 
 
   return data
 }
+
+type CreateBook = (
+  session: Session | null,
+  params: { title: string; description: string; image: FileList }
+) => Promise<{ data: Book }>
+
+export const createBook: CreateBook = async (session, params) => {
+  if (!session) redirect('/login')
+
+  const payload = new FormData()
+  payload.append('book[title]', params.title)
+  payload.append('book[description]', params.description)
+  payload.append('book[image]', params.image[0])
+
+  const response = await fetch(`${REST_SERVER}/api/v1/books`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      Authorization: `bearer ${session.accessToken}`
+    },
+    body: payload
+  })
+
+  if (!response.ok) throw new Error(response.statusText)
+
+  const data = await response.json()
+
+  return data
+}
