@@ -1,5 +1,6 @@
 'use client'
 
+import { Tooltip } from 'components/tooltips'
 import Image from 'next/image'
 import React from 'react'
 import { FaPlusCircle, FaMinusCircle, FaCheckCircle, FaBook } from 'react-icons/fa'
@@ -22,33 +23,41 @@ export const BookCard: React.FC<BookCardProps> = ({ book, actions }) => {
   const actionSelector = (status: ReadingListStatus) => {
     if (!status)
       return (
-        <FaPlusCircle
-          onClick={() => onClickAddToList(book.id)}
-          title="Add to list"
-          className="transition-all duration-200 hover:text-cyan-400"
-        />
+        <Tooltip message="Add to list">
+          <FaPlusCircle
+            onClick={() => onClickAddToList(book.id)}
+            title="Add to list"
+            className="transition-all duration-200 hover:text-cyan-400"
+          />
+        </Tooltip>
       )
 
     return (
       <>
         {status === 'finished' ? (
-          <FaBook
-            onClick={() => onClickUpdateStatus(reading_list_id, 'unread')}
-            title="Mark as unread"
-            className="transition-all duration-200 hover:text-amber-400"
-          />
+          <Tooltip message="Mark as unread">
+            <FaBook
+              onClick={() => onClickUpdateStatus(reading_list_id, 'unread')}
+              title="Mark as unread"
+              className="transition-all duration-200 hover:text-amber-400"
+            />
+          </Tooltip>
         ) : (
-          <FaCheckCircle
-            onClick={() => onClickUpdateStatus(reading_list_id, 'finished')}
-            title="Mark as read"
-            className="transition-all duration-200 hover:text-emerald-400"
-          />
+          <Tooltip message="Mark as read">
+            <FaCheckCircle
+              onClick={() => onClickUpdateStatus(reading_list_id, 'finished')}
+              title="Mark as read"
+              className="transition-all duration-200 hover:text-emerald-400"
+            />
+          </Tooltip>
         )}
-        <FaMinusCircle
-          onClick={() => onClickRemoveFromList(reading_list_id)}
-          title="Remove from list"
-          className="transition-all duration-200 hover:text-red-400"
-        />
+        <Tooltip message="Remove from list">
+          <FaMinusCircle
+            onClick={() => onClickRemoveFromList(reading_list_id)}
+            title="Remove from list"
+            className="transition-all duration-200 hover:text-red-400"
+          />
+        </Tooltip>
       </>
     )
   }
