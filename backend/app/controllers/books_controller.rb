@@ -34,6 +34,10 @@ class BooksController < ApplicationController
   end
 
   def books
-    @books ||= Book.page(params[:page])
+    if params[:search]
+      @books = Book.search(params[:search], page: params[:page], per_page: 20)
+    else
+      @books ||= Book.page(params[:page])
+    end
   end
 end
