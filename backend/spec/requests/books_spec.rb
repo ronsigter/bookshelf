@@ -99,6 +99,18 @@ RSpec.describe("Books") do
       it { expect(json_body[:meta][:pagination][:prev_page]).to(be(4)) }
       it { expect(json_body[:meta][:pagination][:total_pages]).to(be(5)) }
     end
+
+    context "when there's a search parameter" do
+      let(:params) { { search: "book 1" } }
+
+      it { expect(response).to(have_http_status(:ok)) }
+      it { expect(error_messages).to(be_nil) }
+      it { expect(data.length).to(be(20)) }
+      it { expect(json_body[:meta][:pagination][:current_page]).to(be(5)) }
+      it { expect(json_body[:meta][:pagination][:next_page]).to(be_nil) }
+      it { expect(json_body[:meta][:pagination][:prev_page]).to(be(4)) }
+      it { expect(json_body[:meta][:pagination][:total_pages]).to(be(5)) }
+    end
   end
 
   describe "POST /api/v1/books/" do
