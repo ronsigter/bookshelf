@@ -5,7 +5,9 @@ class BooksController < ApplicationController
   before_action :authorize_request
 
   def index
-    render(json: BookSerializer.new(books, meta_pagination(books, { params: { current_user: current_user } })),
+    render(json: BookSerializer.new(books.map do |book|
+                                      book
+                                    end, meta_pagination(books, { params: { current_user: current_user } })),
       status: :ok)
   end
 
@@ -34,10 +36,11 @@ class BooksController < ApplicationController
   end
 
   def books
-    if params[:search]
-      @books = Book.search(params[:search], page: params[:page], per_page: 20)
+    @books ||= if params[:search]
+      Book.search(params[:search], page: params[:page],
+        per_page: 20)
     else
-      @books ||= Book.page(params[:page])
+      Book.page(params[:page])
     end
   end
 end
