@@ -10,6 +10,7 @@ env:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: backend_test
+  ELASTICSEARCH_URL: http://localhost:9200
 
 jobs:
   frontend:
@@ -49,6 +50,17 @@ jobs:
           - 5432:5432
         options:
           --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      elasticsearch:
+        image: elasticsearch:8.5.2
+        ports:
+        - 9200:9200
+        options:
+          -e "discovery.type=single-node"
+          -e "xpack.security.enabled=false"
+          --health-cmd "curl http://localhost:9200/_cluster/health"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
