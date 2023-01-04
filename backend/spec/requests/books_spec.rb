@@ -9,10 +9,10 @@ RSpec.describe("Books") do
   let(:headers) { generate_authorization_header(User.find_by(username: "user-0")) }
 
   before do
-    create_list(:book, 100)
-
-    # Reindex for elasticsearch
-    Book.reindex
+    build_list(:book, 100) do |book, i|
+      book.title = "book-#{i}"
+      book.save!
+    end
 
     build_list(:user, 2) do |user, i|
       user.username = "user-#{i}"
@@ -76,7 +76,10 @@ RSpec.describe("Books") do
 
     let(:params) { { page: 5 } }
 
-    before { request }
+    before do
+      refresh_elasticsearch(Book)
+      request
+    end
 
     context "when requesting client is unauthorized" do
       it_behaves_like "an unauthorized request"

@@ -16,8 +16,7 @@
 #
 FactoryBot.define do
   factory :book do
-    sequence(:title) { |n| "Book #{n}" }
-
+    title { Faker::Book.title }
     description { Faker::Lorem.paragraph(sentence_count: 5) }
 
     after(:build) do |book|
