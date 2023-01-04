@@ -11,6 +11,7 @@ env:
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: backend_test
   ELASTICSEARCH_URL: http://localhost:9200
+  ELASTICSEARCH_VERSION: 8.5.2
 
 jobs:
   frontend:
@@ -53,17 +54,6 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-      elasticsearch:
-        image: elasticsearch:8.5.2
-        ports:
-        - 9200:9200
-        options:
-          -e "discovery.type=single-node"
-          -e "xpack.security.enabled=false"
-          --health-cmd "curl http://localhost:9200/_cluster/health"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -71,6 +61,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Setup Elasticsearch ${{ env.ELASTICSEARCH_VERSION }}
+        uses: ankane/setup-elasticsearch@v1
+        with:
+          elasticsearch-version: ${{ env.ELASTICSEARCH_VERSION }}
+          config: |
+            http.port: 9200
       - name: OpenSSL Version
         run: openssl version
       - name: update SSL Version
