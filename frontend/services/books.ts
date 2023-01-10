@@ -37,19 +37,22 @@ export type ListBooksType = {
 
 type Params = {
   page?: number
+  search?: string
 }
 
 type ListBooks = (session: Session | null, params?: Params) => Promise<ListBooksType>
 
 const defaultParameters: Params = {
-  page: 1
+  page: 1,
+  search: '*'
 }
 
 export const listBooks: ListBooks = async (session, params = defaultParameters) => {
-  const { page } = params
   if (!session) redirect('/login')
 
-  const response = await fetch(`${REST_SERVER}/api/v1/books?page=${page}`, {
+  const queryParams = new URLSearchParams(params).toString()
+
+  const response = await fetch(`${REST_SERVER}/api/v1/books?` + queryParams, {
     method: 'GET',
     headers: headers(session.accessToken)
   })
