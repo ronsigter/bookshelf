@@ -10,6 +10,8 @@ env:
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: postgres
   POSTGRES_DB: backend_test
+  ELASTICSEARCH_URL: http://localhost:9200
+  ELASTICSEARCH_VERSION: 8.5.2
 
 jobs:
   frontend:
@@ -59,6 +61,12 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ env.RUBY_VERSION }}
+      - name: Setup Elasticsearch ${{ env.ELASTICSEARCH_VERSION }}
+        uses: ankane/setup-elasticsearch@v1
+        with:
+          elasticsearch-version: ${{ env.ELASTICSEARCH_VERSION }}
+          config: |
+            http.port: 9200
       - name: OpenSSL Version
         run: openssl version
       - name: update SSL Version

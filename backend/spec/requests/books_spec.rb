@@ -9,7 +9,11 @@ RSpec.describe("Books") do
   let(:headers) { generate_authorization_header(User.find_by(username: "user-0")) }
 
   before do
-    create_list(:book, 100)
+    build_list(:book, 100) do |book, i|
+      book.title = "book-#{i}"
+      book.save!
+    end
+
     build_list(:user, 2) do |user, i|
       user.username = "user-#{i}"
       user.save!
@@ -72,7 +76,10 @@ RSpec.describe("Books") do
 
     let(:params) { { page: 5 } }
 
-    before { request }
+    before do
+      refresh_elasticsearch(Book)
+      request
+    end
 
     context "when requesting client is unauthorized" do
       it_behaves_like "an unauthorized request"
@@ -98,6 +105,18 @@ RSpec.describe("Books") do
       it { expect(json_body[:meta][:pagination][:next_page]).to(be_nil) }
       it { expect(json_body[:meta][:pagination][:prev_page]).to(be(4)) }
       it { expect(json_body[:meta][:pagination][:total_pages]).to(be(5)) }
+    end
+
+    context "when there's a search parameter" do
+      let(:params) { { search: "book 100" } }
+
+      it { expect(response).to(have_http_status(:ok)) }
+      it { expect(error_messages).to(be_nil) }
+      it { expect(data.length).to(be(1)) }
+      it { expect(json_body[:meta][:pagination][:current_page]).to(be(1)) }
+      it { expect(json_body[:meta][:pagination][:next_page]).to(be_nil) }
+      it { expect(json_body[:meta][:pagination][:prev_page]).to(be_nil) }
+      it { expect(json_body[:meta][:pagination][:total_pages]).to(be(1)) }
     end
   end
 

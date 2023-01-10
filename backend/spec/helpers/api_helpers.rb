@@ -10,4 +10,9 @@ module ApiHelpers
     token = JwtService.encode({ user_id: user.id })
     { "Authorization": "bearer #{token}" }
   end
+
+  def refresh_elasticsearch(model)
+    model.reindex
+    model.search_index.refresh
+  end
 end

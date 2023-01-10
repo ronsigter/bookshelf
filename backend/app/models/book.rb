@@ -15,6 +15,8 @@
 #  index_books_on_title  (title)
 #
 class Book < ApplicationRecord
+  searchkick
+
   has_one_attached :image
 
   has_many :reading_lists, dependent: :destroy
