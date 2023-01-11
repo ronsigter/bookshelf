@@ -26,6 +26,9 @@ export const useSearchBookQuery = (): UseSearchBookQuery => {
   const query = useInfiniteQuery({
     queryKey: ['books', debouncedValue],
     queryFn: async () => {
+      // save searchTerm to cache
+      queryClient.setQueryData(['searchTerm'], debouncedValue)
+
       const books = await listBooks(session, { search: debouncedValue || '*' })
       return books
     },
