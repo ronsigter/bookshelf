@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { MENUS } from './constants'
 import { DropdownMenu } from './DropdownMenu'
 import { NavLinks } from './NavLinks'
+import { Searchbar } from './Searchbar'
 
 export const NavBar: React.FC = () => {
   return (
@@ -17,7 +18,10 @@ export const NavBar: React.FC = () => {
           <NavLinks key={menu.label} {...menu} />
         ))}
       </ul>
-      <DropdownMenu />
+      <div className="ml-auto flex items-center gap-4">
+        <Searchbar />
+        <DropdownMenu />
+      </div>
     </div>
   )
 }

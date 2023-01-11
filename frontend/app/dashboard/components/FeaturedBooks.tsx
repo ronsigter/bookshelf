@@ -3,7 +3,7 @@
 import { BookCard } from 'components/cards/BookCard'
 import { useListBooksQuery } from 'hooks/useListBooksQuery'
 import { useReadingListActions } from 'hooks/useReadingListActions'
-import type { Book, ListBooksType, ReadingListStatus } from 'services/books'
+import type { ListBooksType, ReadingListStatus } from 'services/books'
 
 type FeaturedBooksProps = {
   books: ListBooksType
@@ -38,7 +38,7 @@ export const FeaturedBooks: React.FC<FeaturedBooksProps> = ({ books }) => {
     <div>
       <h3 className="mb-4 text-white">Featured books</h3>
       <div className="flex flex-wrap gap-4">
-        {data?.pages.map((page) =>
+        {data?.pages?.map((page) =>
           page.data.map((book) => <BookCard key={book.id} book={book} actions={actions} />)
         )}
         {hasNextPage && (
