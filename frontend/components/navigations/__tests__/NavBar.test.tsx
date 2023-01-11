@@ -1,13 +1,28 @@
-import { render, screen, userEvent } from 'lib/jest'
+import { render, screen, setupMockServer, userEvent } from 'lib/jest'
 import { NavBar } from '../NavBar'
 import type { SignOutParams } from 'next-auth/react'
+import { listBooksApiHandler } from 'mocks/books-api-handler'
 
 const mockNextAuthSignOut = jest.fn()
-jest.mock('next-auth/react', () => ({
-  signOut(options: SignOutParams) {
-    mockNextAuthSignOut(options)
+jest.mock('next-auth/react', () => {
+  const originalModule = jest.requireActual('next-auth/react')
+  const mockSession = {
+    expires: new Date(Date.now() + 2 * 86400).toISOString(),
+    user: { username: 'tester' }
   }
-}))
+
+  return {
+    ...originalModule,
+    useSession: jest.fn(() => {
+      return { data: mockSession, status: 'authenticated' } // return type is [] in v3 but changed to {} in v4
+    }),
+    signOut(options: SignOutParams) {
+      mockNextAuthSignOut(options)
+    }
+  }
+})
+
+setupMockServer(listBooksApiHandler)
 
 describe('<Navbar />', () => {
   const user = userEvent.setup()
@@ -23,7 +38,7 @@ describe('<Navbar />', () => {
     expect(screen.getByRole('img', { name: /bookney-logo/i })).toBeInTheDocument()
   })
 
-  it('log out signed user', async () => {
+  it('logs out signed user', async () => {
     render(<NavBar />)
 
     await user.click(screen.getByRole('button', { name: /sign out/i }))
