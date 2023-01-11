@@ -50,7 +50,8 @@ const defaultParameters: Params = {
 export const listBooks: ListBooks = async (session, params = defaultParameters) => {
   if (!session) redirect('/login')
 
-  const queryParams = new URLSearchParams(params).toString()
+  // ? https://github.com/microsoft/TypeScript/issues/32951
+  const queryParams = new URLSearchParams(params as any).toString()
 
   const response = await fetch(`${REST_SERVER}/api/v1/books?` + queryParams, {
     method: 'GET',
