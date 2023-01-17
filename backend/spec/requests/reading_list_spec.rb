@@ -10,8 +10,8 @@ RSpec.describe("ReadingList") do
   let(:reading_list) { ReadingList.first }
 
   before do
-    create_list(:book, 10)
-    create_list(:reading_list, 10)
+    create(:book)
+    create(:reading_list)
   end
 
   shared_examples "an unauthorized request" do

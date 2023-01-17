@@ -20,6 +20,14 @@ RSpec.describe("MyBooks") do
     it { expect(error_messages).to(include("Unauthorized request detected")) }
   end
 
+  shared_examples "a paginated response" do
+    it { expect(response).to(have_http_status(:ok)) }
+    it { expect(error_messages).to(be_nil) }
+    it { expect(json_body[:meta][:pagination][:current_page]).to(be(1)) }
+    it { expect(json_body[:meta][:pagination][:next_page]).to(be_nil) }
+    it { expect(json_body[:meta][:pagination][:prev_page]).to(be_nil) }
+  end
+
   describe "GET /api/v1/my_books" do
     subject(:request) { get("/api/v1/my_books/", params: {}, headers: headers) }
 
@@ -30,15 +38,17 @@ RSpec.describe("MyBooks") do
     end
 
     context "when there are reading lists of user" do
-      let(:params) { {} }
-
-      it { expect(response).to(have_http_status(:ok)) }
-      it { expect(error_messages).to(be_nil) }
+      it_behaves_like "a paginated response"
       it { expect(data.length).to(be(10)) }
-      it { expect(json_body[:meta][:pagination][:current_page]).to(be(1)) }
-      it { expect(json_body[:meta][:pagination][:next_page]).to(be_nil) }
-      it { expect(json_body[:meta][:pagination][:prev_page]).to(be_nil) }
       it { expect(json_body[:meta][:pagination][:total_pages]).to(be(1)) }
+    end
+
+    context "when there are no reading lists of user" do
+      let(:headers) { generate_authorization_header(User.find_by(username: "user-1")) }
+
+      it_behaves_like "a paginated response"
+      it { expect(data.length).to(be(0)) }
+      it { expect(json_body[:meta][:pagination][:total_pages]).to(be(0)) }
     end
   end
 end
