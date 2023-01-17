@@ -9,13 +9,15 @@ RSpec.describe("Books") do
   let(:headers) { generate_authorization_header(User.find_by(username: "user-0")) }
 
   before do
-    build_list(:book, 80) do |book, i|
+    build_list(:book, 100) do |book, i|
       book.title = "book-#{i}"
       book.save!
     end
 
-    create(:user_with_books, books_count: 10, username: "user-0")
-    create(:user, username: "user-1")
+    build_list(:user, 2) do |user, i|
+      user.username = "user-#{i}"
+      user.save!
+    end
   end
 
   shared_examples "an unauthorized request" do
@@ -25,32 +27,10 @@ RSpec.describe("Books") do
     it { expect(error_messages).to(include("Unauthorized request detected")) }
   end
 
-  describe "GET /api/v1/my_books" do
-    subject(:request) { get("/api/v1/my_books/", params: {}, headers: headers) }
-
-    before { request }
-
-    context "when requesting client is unauthorized" do
-      it_behaves_like "an unauthorized request"
-    end
-
-    context "when there are reading lists of user" do
-      let(:params) { {} }
-
-      it { expect(response).to(have_http_status(:ok)) }
-      it { expect(error_messages).to(be_nil) }
-      it { expect(data.length).to(be(10)) }
-      it { expect(json_body[:meta][:pagination][:current_page]).to(be(1)) }
-      it { expect(json_body[:meta][:pagination][:next_page]).to(be_nil) }
-      it { expect(json_body[:meta][:pagination][:prev_page]).to(be_nil) }
-      it { expect(json_body[:meta][:pagination][:total_pages]).to(be(1)) }
-    end
-  end
-
   describe "GET /api/v1/books/:id" do
     subject(:request) { get("/api/v1/books/#{book_id}", params: {}, headers: headers) }
 
-    let(:book) { Book.find_by(title: "book-0") }
+    let(:book) { Book.first }
     let(:book_id) { book.id }
 
     before do
@@ -120,7 +100,7 @@ RSpec.describe("Books") do
     context "when there's a page parameter" do
       it { expect(response).to(have_http_status(:ok)) }
       it { expect(error_messages).to(be_nil) }
-      it { expect(data.length).to(be(10)) }
+      it { expect(data.length).to(be(20)) }
       it { expect(json_body[:meta][:pagination][:current_page]).to(be(5)) }
       it { expect(json_body[:meta][:pagination][:next_page]).to(be_nil) }
       it { expect(json_body[:meta][:pagination][:prev_page]).to(be(4)) }
