@@ -5,8 +5,7 @@ class BooksController < ApplicationController
   before_action :authorize_request
 
   def index
-    render(json: BookSerializer.new(book_ref, meta_pagination(books, { params: { current_user: current_user } })),
-      status: :ok)
+    render(json: BookSerializer.new(book_ref, pagination(books)), status: :ok)
   end
 
   def show
@@ -40,5 +39,9 @@ class BooksController < ApplicationController
 
   def book_ref
     @book_ref ||= books.map { |book| book }
+  end
+
+  def pagination(object)
+    meta_pagination(object, { params: { current_user: current_user } })
   end
 end
