@@ -9,6 +9,7 @@ Rails.application.routes.draw do
     scope :v1 do
       resources :books, only: [:create, :index, :show]
       resources :reading_lists, only: [:create, :update, :destroy]
+      get :my_books, to: "books#user_books_index"
     end
   end
 end
