@@ -16,19 +16,34 @@ export const createBookApiHandler = [
 
 export const listBooksApiHandler = [
   rest.get(`${REST_SERVER}/api/v1/books`, async (_req, res, ctx) => {
-    const books = Array.from({ length: 5 }).map(() => {
-      const book = db.book.create()
-      return {
-        id: book.id,
-        type: 'book' as const,
-        attributes: book
-      }
-    })
+    // get existing books
+    let booksData = db.book.getAll()
+
+    // if no books found, create
+    if (booksData.length === 0)
+      booksData = Array.from({ length: 5 }).map(() => {
+        return db.book.create()
+      })
+
+    // sanitize
+    const books = booksData.map((book) => ({
+      id: book.id,
+      type: 'book' as const,
+      attributes: book
+    }))
 
     return res(
       ctx.status(200),
       ctx.json({
-        data: books
+        data: books,
+        meta: {
+          pagination: {
+            current_page: 1,
+            prev_page: null,
+            next_page: null,
+            total_pages: 1
+          }
+        }
       })
     )
   })

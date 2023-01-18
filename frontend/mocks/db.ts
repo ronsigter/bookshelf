@@ -1,4 +1,4 @@
-import { factory, primaryKey } from '@mswjs/data'
+import { factory, nullable, primaryKey } from '@mswjs/data'
 import { faker } from '@faker-js/faker'
 
 export const db = factory({
@@ -16,7 +16,7 @@ export const db = factory({
     image: {
       url: () => faker.image.imageUrl()
     },
-    reading_status: () => 'unread' as const,
+    reading_status: nullable(String),
     reading_list_id: () => faker.datatype.uuid()
   }
 })
