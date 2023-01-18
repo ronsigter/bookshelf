@@ -3,13 +3,16 @@ import {
   screen,
   userEvent,
   setupMockServer,
-  waitFor,
   within,
   waitForElementToBeRemoved
 } from 'lib/jest'
 import { listBooksApiHandler } from 'mocks/books-api-handler'
 import { db } from 'mocks/db'
-import { addToReadingListApiHandler } from 'mocks/reading-lists-api-handler'
+import {
+  addToReadingListApiHandler,
+  removeFromReadingListApiHandler,
+  updateReadingListApiHandler
+} from 'mocks/reading-lists-api-handler'
 import { Book } from 'services/books'
 import { FeaturedBooks } from '../FeaturedBooks'
 
@@ -27,7 +30,12 @@ jest.mock('next-auth/react', () => {
   }
 })
 
-setupMockServer([...addToReadingListApiHandler, ...listBooksApiHandler])
+setupMockServer([
+  ...listBooksApiHandler,
+  ...addToReadingListApiHandler,
+  ...updateReadingListApiHandler,
+  ...removeFromReadingListApiHandler
+])
 
 describe('<FeaturedBooks />', () => {
   const user = userEvent.setup()
@@ -63,7 +71,7 @@ describe('<FeaturedBooks />', () => {
     expect(screen.getAllByRole('presentation', { name: 'book-card' }).length).toBe(5)
   })
 
-  it('updates the set of CTA button of <BookCard /> component when add-to-list action was clicked', async () => {
+  it('updates the set of CTA button of <BookCard /> component when an action was clicked', async () => {
     render(
       <FeaturedBooks
         books={{
@@ -82,10 +90,26 @@ describe('<FeaturedBooks />', () => {
 
     // add the first book
     await user.click(within(bookCards()[0]).getByTitle('Add to list'))
-
-    // expect new action buttons
     await waitForElementToBeRemoved(within(bookCards()[0]).queryByTitle('Add to list'))
     expect(within(bookCards()[0]).getByTitle('Mark as read')).toBeInTheDocument()
     expect(within(bookCards()[0]).getByTitle('Remove from list')).toBeInTheDocument()
+
+    // mark as read the first book
+    await user.click(within(bookCards()[0]).getByTitle('Mark as read'))
+    await waitForElementToBeRemoved(within(bookCards()[0]).queryByTitle('Mark as read'))
+    expect(within(bookCards()[0]).getByTitle('Mark as unread')).toBeInTheDocument()
+    expect(within(bookCards()[0]).getByTitle('Remove from list')).toBeInTheDocument()
+
+    // mark as unread the first book
+    await user.click(within(bookCards()[0]).getByTitle('Mark as unread'))
+    await waitForElementToBeRemoved(within(bookCards()[0]).queryByTitle('Mark as unread'))
+    expect(within(bookCards()[0]).getByTitle('Mark as read')).toBeInTheDocument()
+    expect(within(bookCards()[0]).getByTitle('Remove from list')).toBeInTheDocument()
+
+    // remove the first book
+    await user.click(within(bookCards()[0]).getByTitle('Remove from list'))
+    await waitForElementToBeRemoved(within(bookCards()[0]).queryByTitle('Remove from list'))
+    expect(within(bookCards()[0]).getByTitle('Add to list')).toBeInTheDocument()
+    expect(within(bookCards()[0]).queryByTitle('Mark as read')).toBeNull()
   })
 })
