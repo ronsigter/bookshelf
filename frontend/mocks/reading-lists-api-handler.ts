@@ -64,11 +64,14 @@ export const removeFromReadingListApiHandler = [
   rest.delete(`${REST_SERVER}/api/v1/reading_lists/:reading_list_id`, async (req, res, ctx) => {
     const { reading_list_id } = req.params
 
-    db.book.delete({
+    db.book.update({
       where: {
         reading_list_id: {
           equals: reading_list_id as string
         }
+      },
+      data: {
+        reading_status: null
       }
     })
 
