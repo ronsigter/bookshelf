@@ -3,21 +3,16 @@ import { db } from './db'
 
 const REST_SERVER = process.env.REST_SERVER || ''
 
-export const createBookApiHandler = [
-  rest.post(`${REST_SERVER}/api/v1/books`, async (_req, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({
-        data: { token: 'header.payload.signature' }
-      })
-    )
-  })
-]
-
-export const listBooksApiHandler = [
-  rest.get(`${REST_SERVER}/api/v1/books`, async (_req, res, ctx) => {
+export const listMyBooksApiHandler = [
+  rest.get(`${REST_SERVER}/api/v1/my_books`, async (_req, res, ctx) => {
     // get existing books
-    let booksData = db.book.getAll()
+    let booksData = db.book.findMany({
+      where: {
+        reading_status: {
+          notIn: ['null']
+        }
+      }
+    })
 
     // if no books found, create
     if (booksData.length === 0)

@@ -16,7 +16,10 @@ export const useReadingListActions = () => {
       const { data } = await addToReadingList(session, vars)
       return data
     },
-    onSuccess: () => queryClient.invalidateQueries(['books'])
+    onSuccess: () => {
+      queryClient.invalidateQueries(['books'])
+      queryClient.invalidateQueries(['my_books'])
+    }
   })
 
   const remove = useMutation({
@@ -24,7 +27,10 @@ export const useReadingListActions = () => {
       const { data } = await removeFromReadingList(session, vars)
       return data
     },
-    onSuccess: () => queryClient.invalidateQueries(['books'])
+    onSuccess: () => {
+      queryClient.invalidateQueries(['books'])
+      queryClient.invalidateQueries(['my_books'])
+    }
   })
 
   const update = useMutation({
@@ -32,7 +38,10 @@ export const useReadingListActions = () => {
       const { data } = await updateReadingListStatus(session, vars)
       return data
     },
-    onSuccess: () => queryClient.invalidateQueries(['books'])
+    onSuccess: () => {
+      queryClient.invalidateQueries(['books'])
+      queryClient.invalidateQueries(['my_books'])
+    }
   })
 
   return {
