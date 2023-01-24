@@ -124,6 +124,7 @@ GEM
     faraday-net_http (3.0.2)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    graphql (2.0.16)
     hashie (5.0.0)
     http-accept (1.7.0)
     http-cookie (1.0.5)
@@ -304,6 +305,7 @@ DEPENDENCIES
   enumerize
   factory_bot_rails
   faker
+  graphql (~> 2.0)
   jsonapi-serializer
   jwt
   kaminari
