@@ -12,4 +12,10 @@ Rails.application.routes.draw do
       get :my_books, to: "my_books#index"
     end
   end
+
+  # graphql endpoint
+  post "/graphql", to: "graphql#execute"
+  if Rails.env.development?
+    mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
+  end
 end
